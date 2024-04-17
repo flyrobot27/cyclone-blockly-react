@@ -1,34 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BlocklyWorkspace } from 'react-blockly';
+import { forBlock, cycloneGenerator } from './generators/cyclone';
+import { blocks } from './blocks/text';
+import { toolbox } from './toolbox';
+import Blockly from "blockly";
+import { workspaceHandler } from './workspaceHandlers';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const initialXml = '<xml xmlns="https://developers.google.com/blockly/xml"><block type="main_block" x="25" y="20"><field name="PROCESS_NAME">process name</field><field name="length_of_run">1</field><field name="no_of_cycles">1</field></block></xml>';
+
+  Blockly.common.defineBlocks(blocks);
+  Object.assign(cycloneGenerator.forBlock, forBlock);
+  function setWorkspaceHandler(workspace: Blockly.WorkspaceSvg) {
+    workspaceHandler(workspace);
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <BlocklyWorkspace
+        toolboxConfiguration={toolbox}
+        initialXml={initialXml}
+        className="fill-height"
+        workspaceConfiguration={{
+          grid: {
+            spacing: 20,
+            length: 3,
+            colour: "#ccc",
+            snap: true
+          }
+        }}
+        onInject={setWorkspaceHandler}
+      />
+    </div>
   )
 }
 
