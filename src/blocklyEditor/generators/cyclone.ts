@@ -341,7 +341,7 @@ forBlock[BlockNames.NonStationaryInputConnector.Type] = function (
 // Description blocks returns raw string
 forBlock[BlockNames.Description.Type] = function (
   block: Blockly.Block,
-  generator: Blockly.CodeGenerator
+  _generator: Blockly.CodeGenerator
 ) {
   var text_description = block.getFieldValue(BlockNames.Description.Description);
   return [text_description, Order.ATOMIC];
@@ -349,7 +349,7 @@ forBlock[BlockNames.Description.Type] = function (
 
 forBlock[BlockNames.Distribution.Type] = function (
   block: Blockly.Block,
-  generator: Blockly.CodeGenerator
+  _generator: Blockly.CodeGenerator
 ) {
   var distributionName = block.getFieldValue(BlockNames.Distribution.Distribution);
   var codeJson: any = {
