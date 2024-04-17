@@ -1,9 +1,9 @@
 import { BlocklyWorkspace } from 'react-blockly';
-import { forBlock, cycloneGenerator } from './generators/cyclone';
-import { blocks } from './blocks/text';
-import { toolbox } from './toolbox';
+import { forBlock, cycloneGenerator } from './blocklyEditor/generators/cyclone';
+import { blocks } from './blocklyEditor/blocks/text';
+import { toolbox } from './blocklyEditor/toolbox';
 import Blockly from "blockly";
-import { workspaceHandler } from './workspaceHandlers';
+import { workspaceHandler } from './blocklyEditor/workspaceHandlers';
 import './App.css'
 
 function App() {

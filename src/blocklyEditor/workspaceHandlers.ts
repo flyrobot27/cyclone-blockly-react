@@ -1,5 +1,5 @@
 import Blockly from "blockly";
-import { load, save } from "./serialization";
+import { load, save } from "../serialization";
 import BlockNames from "./blocks/names";
 import { cycloneGenerator } from "./generators/cyclone";
 
