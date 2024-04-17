@@ -20,7 +20,7 @@ export const toolbox = {
         {
             kind: 'category',
             name: 'Main',
-            colour: "#5C81A6",
+            categorystyle: 'variable_category',
             contents: [
                 {
                     kind: 'block',
@@ -31,7 +31,7 @@ export const toolbox = {
         {
             kind: 'category',
             name: 'Network Input Block',
-            colour: "#5C81A6",
+            categorystyle: 'logic_category',
             contents: [
                 {
                     kind: 'block',
@@ -58,7 +58,7 @@ export const toolbox = {
         {
             kind: 'category',
             name: 'Network Input Reference',
-            colour: "#5C81A6",
+            categorystyle: 'logic_category',
             contents: [
                 {
                     kind: 'block',
@@ -81,7 +81,7 @@ export const toolbox = {
         {
             kind: 'category',
             name: 'Resource Input Block',
-            colour: "#5C81A6",
+            categorystyle: 'math_category',
             contents: [ 
                 {
                     kind: 'block',
@@ -100,7 +100,7 @@ export const toolbox = {
         {
             kind: 'category',
             name: 'Duration Input Block',
-            colour: "#5C81A6",
+            categorystyle: 'procedure_category',
             contents: [
                 {
                     kind: 'block',
@@ -119,7 +119,7 @@ export const toolbox = {
         {
             kind: 'category',
             name: 'Description',
-            colour: "#5C81A6",
+            categorystyle: 'text_category',
             contents: [
                 {
                     kind: 'block',
