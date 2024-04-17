@@ -10,6 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -56,9 +57,11 @@ function App() {
   };
 
   function setWorkspaceHandler(workspace: Blockly.WorkspaceSvg) {
-    workspaceHandler(workspace, "", setGeneratedCodeList);
+    workspaceHandler(workspace, "RunCode", setGeneratedCodeList);
   }
 
+  console.log(generatedCodeList);
+  
   return (
     <div>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -68,6 +71,8 @@ function App() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
+        <Button id="RunCode">Simulate Model</Button>
+        <p/>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
           className="fill-height"
