@@ -2,11 +2,11 @@ import Blockly from "blockly";
 import { load, save } from "../serialization";
 import BlockNames from "./blocks/names";
 import { cycloneGenerator } from "./generators/cyclone";
+import { Dispatch } from "react";
 
 // workspace
-export const workspaceHandler = (ws: Blockly.WorkspaceSvg) => {
-    const runButton = document.getElementById('runButton');
-    const codeDiv = document.getElementById('generatedCode');
+export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, setGeneratedCodeList: Dispatch<Array<string>>) => {
+    const runButton = document.getElementById(runButtonId);
     const MIN_LABEL = 0;
 
     // Load previous workspace
@@ -683,17 +683,14 @@ export const workspaceHandler = (ws: Blockly.WorkspaceSvg) => {
     if (runButton) {
         runButton.onclick = function () {
             var mainBlock = ws.getBlocksByType(BlockNames.MainBlock.Type);
-            var textContent = ""
+            var codes = new Array<string>();
 
             for (var i = 0; i < mainBlock.length; i++) {
                 var code = cycloneGenerator.blockToCode(mainBlock[i]) as string;
-                textContent += code;
-                if ((i + 1) < mainBlock.length) textContent += "\n ============================= \n";
+                codes.push(code);
             }
-            if (codeDiv) {
-                if (!textContent) textContent = "No Main Block is placed. No code is generated."
-                codeDiv.textContent = textContent;
-            }
+            
+            setGeneratedCodeList(codes);
         }
     }
 
