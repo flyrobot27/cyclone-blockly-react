@@ -328,6 +328,8 @@ export const workspaceHandler = (ws: Blockly.WorkspaceSvg) => {
         var precedersHead = block.getInputTargetBlock(BlockNames.CombiInputStatement.Preceders)
 
         switch (block.type) {
+            // Explicit fall through
+            //@ts-ignore
             case BlockNames.CombiInputStatement.Type:
                 var preceedersCount = countRefLength(precedersHead);
 
