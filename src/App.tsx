@@ -142,17 +142,17 @@ function App() {
         </Tabs>
       </Box>
       <TopTabPanel value={value} index={0}>
-        <Button id="RunCode" disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
-        <Button component="label" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
+        <Button id="RunCode" className="bg-blue-500 text-white mb-6 mr-4" disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
+        <Button component="label" className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
         <Button
           component="label"
           role={undefined}
           variant="contained"
           tabIndex={-1}
+          className='bg-red-600 text-white mb-6 mr-4'
         >Load Model from file
           <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
         </Button>
-        <h1></h1>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
           className="fill-height"
