@@ -120,6 +120,8 @@ function App() {
   // Detect if run button is clicked
   useEffect(() => {
     if (runButtonClicked === false) return;
+    // Clear previous result
+    setSimphonyResultProps(null);
     // Change page
     setValue(1);
     setRunButtonClicked(false);
