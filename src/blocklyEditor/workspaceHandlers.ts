@@ -1,17 +1,22 @@
 import Blockly from "blockly";
-import { load, save } from "../serialization";
+import { load, save } from "./serialization";
 import BlockNames from "./blocks/names";
 import { cycloneGenerator } from "./generators/cyclone";
 import { Dispatch } from "react";
 
+const MIN_LABEL = 0;
+
 // workspace
-export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, setGeneratedCodeList: Dispatch<Array<string>>) => {
+export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, setGeneratedCodeList: Dispatch<Array<string>>, setCurrentWarnings: Dispatch<Map<string, string | null>>) => {
     const runButton = document.getElementById(runButtonId);
-    const MIN_LABEL = 0;
 
+    let successLoad = false;
+    let current_warnings: Map<string, string | null> = new Map();
+    
     // Load previous workspace
-    var [successLoad, current_warnings] = load(ws)
-
+    [successLoad, current_warnings] = load(ws);
+    setCurrentWarnings(current_warnings);
+    
     // keep tract of the labels
     var label_lookup = new Map<String, String>();
     var label_type_lookup = new Map<String, String>();
@@ -357,6 +362,7 @@ export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, 
             var currentBlock = ws.getBlockById(key.toString())
             if (currentBlock == null) {
                 current_warnings.delete(key);
+                setCurrentWarnings(current_warnings);
             }
         }
     }
@@ -381,6 +387,7 @@ export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, 
             // all warnings are cleared
             runButton.disabled = false;
             current_warnings.clear();
+            setCurrentWarnings(current_warnings);
         }
     }
 
