@@ -13,11 +13,12 @@ import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
+import ResultView from './resultView/resultView';
+import { postToSimphony } from './postToSimphony';
+import { ResultViewProps } from './resultView/resultView';
 
 Blockly.common.defineBlocks(blocks);
 Object.assign(cycloneGenerator.forBlock, forBlock);
-
-const Endpoint = "http://localhost:8080/api/cyclone";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -73,6 +74,9 @@ function App() {
   const [currentWarnings, setCurrentWarnings] = useState(new Map<string, string | null>());
   const [runButtonDisabled, setRunButtonDisabled] = useState(false);
   const [runButtonTitle, setRunButtonTitle] = useState("Simulate Model");
+  const [runButtonClicked, setRunButtonClicked] = useState(false);
+
+  const [simphonyResultProps, setSimphonyResultProps] = useState<ResultViewProps | null>(null);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -80,7 +84,7 @@ function App() {
 
   function setWorkspaceHandler(workspace: Blockly.WorkspaceSvg) {
     setWorkspace(workspace);
-    workspaceHandler(workspace, "RunCode", setGeneratedCodeList, setCurrentWarnings, setRunButtonDisabled, setRunButtonTitle);
+    workspaceHandler(workspace, "RunCode", setGeneratedCodeList, setCurrentWarnings, setRunButtonDisabled, setRunButtonTitle, setRunButtonClicked);
   }
 
   function workspaceChange(workspace: Blockly.WorkspaceSvg) {
@@ -88,7 +92,7 @@ function App() {
   }
 
   function onSaveWorkspaceClicked() {
-    if (!workspace){
+    if (!workspace) {
       alert("No workspace to save");
       return;
     };
@@ -113,9 +117,19 @@ function App() {
     }
   }
 
+  // Detect if run button is clicked
   useEffect(() => {
-    console.log(generatedCodeList);
-  }, [generatedCodeList]);
+    if (runButtonClicked === false) return;
+    // Change page
+    setValue(1);
+    setRunButtonClicked(false);
+
+    // Post to simphony
+    if (generatedCodeList.length === 0) return;
+    let code = generatedCodeList[0];
+    let data = JSON.parse(code);
+    postToSimphony(data, setSimphonyResultProps);
+  }, [runButtonClicked]);
 
   return (
     <>
@@ -136,7 +150,7 @@ function App() {
         >Load Model from file
           <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
         </Button>
-        <p />
+        <h1></h1>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
           className="fill-height"
@@ -153,6 +167,7 @@ function App() {
         />
       </TopTabPanel>
       <TopTabPanel value={value} index={1}>
+        <ResultView data={simphonyResultProps?.data}></ResultView>
       </TopTabPanel>
     </>
   )

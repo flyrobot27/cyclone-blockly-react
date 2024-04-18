@@ -13,7 +13,8 @@ export const workspaceHandler = (
     setGeneratedCodeList: Dispatch<Array<string>>, 
     setCurrentWarnings: Dispatch<Map<string, string | null>>,
     setRunButtonDisabled: Dispatch<boolean>,
-    setRunButtonTitle: Dispatch<string>) => {
+    setRunButtonTitle: Dispatch<string>,
+    setRunButtonClicked: Dispatch<boolean>) => {
     const runButton = document.getElementById(runButtonId);
 
     let successLoad = false;
@@ -702,6 +703,7 @@ export const workspaceHandler = (
             }
             
             setGeneratedCodeList(codes);
+            setRunButtonClicked(true);
         }
     }
 
