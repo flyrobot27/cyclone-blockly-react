@@ -71,17 +71,17 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
 
     return (
         <TableContainer component={Paper}>
-            <h4>Termination Reason: {terminationReason}</h4>
-            <h3>Intrinsic Result:</h3>
-            <Table sx={{ minWidth: 650 }} aria-label="Intrinsic Result">
+            <h4 className="m-3 font-black">Termination Reason: {terminationReason}</h4>
+            <h3 className="m-3 font-bold">Intrinsic Result:</h3>
+            <Table aria-label="Intrinsic Result">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Element Name</TableCell>
-                        <TableCell align='right'>Minimum Value</TableCell>
-                        <TableCell align='right'>Maximum Value</TableCell>
-                        <TableCell align='right'>Mean</TableCell>
-                        <TableCell align='right'>Standard Deviasion</TableCell>
-                        <TableCell align='right'>Current Value</TableCell>
+                        <TableCell className="font-bold">Element Name</TableCell>
+                        <TableCell align='right' className="font-bold">Minimum Value</TableCell>
+                        <TableCell align='right' className="font-bold">Maximum Value</TableCell>
+                        <TableCell align='right' className="font-bold">Mean</TableCell>
+                        <TableCell align='right' className="font-bold">Standard Deviasion</TableCell>
+                        <TableCell align='right' className="font-bold">Current Value</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -100,16 +100,16 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                 </TableBody>
             </Table>
 
-            <h3>Non Intrinsic Result:</h3>
+            <h3 className="m-3 font-bold">Non Intrinsic Result:</h3>
             <Table sx={{ minWidth: 650 }} aria-label="Non Intrinsic Result">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Element Name</TableCell>
-                        <TableCell align='right'>Minimum Value</TableCell>
-                        <TableCell align='right'>Maximum Value</TableCell>
-                        <TableCell align='right'>Mean</TableCell>
-                        <TableCell align='right'>Standard Deviasion</TableCell>
-                        <TableCell align='right'>Observation Count</TableCell>
+                        <TableCell className="font-bold">Element Name</TableCell>
+                        <TableCell align='right' className="font-bold">Minimum Value</TableCell>
+                        <TableCell align='right' className="font-bold">Maximum Value</TableCell>
+                        <TableCell align='right' className="font-bold">Mean</TableCell>
+                        <TableCell align='right' className="font-bold">Standard Deviasion</TableCell>
+                        <TableCell align='right' className="font-bold">Observation Count</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -128,16 +128,16 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                 </TableBody>
             </Table>
 
-            <h3>Counter Result:</h3>
+            <h3 className="m-3 font-bold">Counter Result:</h3>
             <Table sx={{ minWidth: 650 }} aria-label="Counter Result">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Element Name</TableCell>
-                        <TableCell align='right'>Final Count</TableCell>
-                        <TableCell align='right'>Production Rate</TableCell>
-                        <TableCell align='right'>Average Inter Arrival Time</TableCell>
-                        <TableCell align='right'>First Arrival</TableCell>
-                        <TableCell align='right'>Last Arrival</TableCell>
+                        <TableCell className="font-bold">Element Name</TableCell>
+                        <TableCell align='right' className="font-bold">Final Count</TableCell>
+                        <TableCell align='right' className="font-bold">Production Rate</TableCell>
+                        <TableCell align='right' className="font-bold">Average Inter Arrival Time</TableCell>
+                        <TableCell align='right' className="font-bold">First Arrival</TableCell>
+                        <TableCell align='right' className="font-bold">Last Arrival</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -156,16 +156,16 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                 </TableBody>
             </Table>
 
-            <h3>Waiting File Result:</h3>
+            <h3 className="m-3 font-bold">Waiting File Result:</h3>
             <Table sx={{ minWidth: 650 }} aria-label="Waiting File Result">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Element Name</TableCell>
-                        <TableCell align='right'>Average Length</TableCell>
-                        <TableCell align='right'>Standard Deviasion</TableCell>
-                        <TableCell align='right'>Max Length</TableCell>
-                        <TableCell align='right'>Current Length</TableCell>
-                        <TableCell align='right'>Average Wait Time</TableCell>
+                        <TableCell className="font-bold">Element Name</TableCell>
+                        <TableCell align='right' className="font-bold">Average Length</TableCell>
+                        <TableCell align='right' className="font-bold">Standard Deviasion</TableCell>
+                        <TableCell align='right' className="font-bold">Max Length</TableCell>
+                        <TableCell align='right' className="font-bold">Current Length</TableCell>
+                        <TableCell align='right' className="font-bold">Average Wait Time</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
