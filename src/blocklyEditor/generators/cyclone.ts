@@ -319,18 +319,18 @@ forBlock[BlockNames.NonStationaryInputConnector.Type] = function (
   var value_distribution = JSON.parse(generator.valueToCode(block, BlockNames.NonStationaryInputConnector.Distribution, Order.ATOMIC));
   var category = block.getFieldValue(BlockNames.NonStationaryInputConnector.Category);
   var number_par1 = block.getFieldValue(BlockNames.NonStationaryInputConnector.Increment);
+  var number_par2 = block.getFieldValue(BlockNames.NonStationaryInputConnector.RealizationNumber);
 
   var codeJson: any = {
     "type": "NST",
     "distribution": value_distribution,
     "category": category,
-    "par1": number_par1
+    "par1": number_par1,
+    "par2": number_par2
   }
 
   if (category === BlockNames.NonStationaryInputConnector.CategorySecond) {
-    var number_par2 = block.getFieldValue(BlockNames.NonStationaryInputConnector.RealizationNumber);
     var number_seed = block.getFieldValue(BlockNames.NonStationaryInputConnector.Seed);
-    codeJson["par2"] = number_par2;
     codeJson["seed"] = number_seed;
   }
 
