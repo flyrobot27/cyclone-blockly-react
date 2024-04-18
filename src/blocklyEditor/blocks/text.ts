@@ -503,7 +503,7 @@ const stationary_input_connector = {
 const non_stationary_input_connector = {
   "type": BlockNames.NonStationaryInputConnector.Type,
   "message0": "NST CATEGORY %1 %2",
-  "message1": "INCREMENT %1 REALIZATION NUMBER %2 %3",
+  "message1": "INCREMENT %1 %2",
   "args0": [
     {
       "type": "field_dropdown",
@@ -531,13 +531,6 @@ const non_stationary_input_connector = {
       "name": BlockNames.NonStationaryInputConnector.Increment,
       "value": 0,
       "min": 0
-    },
-    {
-      "type": "field_number",
-      "name": BlockNames.NonStationaryInputConnector.RealizationNumber,
-      "value": 1,
-      "min": 1,
-      "precision": 1
     },
     {
       "type": "input_dummy",
@@ -579,9 +572,17 @@ const NON_STATIONARY_MUTATOR_MIXIN = {
 
     // remove existing fields
     category_input.removeField(BlockNames.NonStationaryInputConnector.Seed, true);
-    category_input.removeField(BlockNames.NonStationaryInputConnector.SeedText, true);
-
+      category_input.removeField(BlockNames.NonStationaryInputConnector.SeedText, true);
+    category_input.removeField(BlockNames.NonStationaryInputConnector.RealizationNumber, true);
+    category_input.removeField(BlockNames.NonStationaryInputConnector.RealizationNumberText, true);
+    
     if (categoryInput === BlockNames.NonStationaryInputConnector.CategorySecond) {
+      category_input.appendField('SEED', BlockNames.NonStationaryInputConnector.SeedText);
+      category_input.appendField(new Blockly.FieldNumber(0, 0, 999999999, 1), BlockNames.NonStationaryInputConnector.Seed);
+    }
+    else if (categoryInput === BlockNames.NonStationaryInputConnector.CategoryFirst) {
+      category_input.appendField('REALIZATION NUMBER', BlockNames.NonStationaryInputConnector.RealizationNumberText);
+      category_input.appendField(new Blockly.FieldNumber(1, 1, 999999999, 1), BlockNames.NonStationaryInputConnector.RealizationNumber);
       category_input.appendField('SEED', BlockNames.NonStationaryInputConnector.SeedText);
       category_input.appendField(new Blockly.FieldNumber(0, 0, 999999999, 1), BlockNames.NonStationaryInputConnector.Seed);
     }
