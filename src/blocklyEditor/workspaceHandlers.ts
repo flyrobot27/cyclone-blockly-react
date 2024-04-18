@@ -7,7 +7,13 @@ import { Dispatch } from "react";
 const MIN_LABEL = 0;
 
 // workspace
-export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, setGeneratedCodeList: Dispatch<Array<string>>, setCurrentWarnings: Dispatch<Map<string, string | null>>) => {
+export const workspaceHandler = (
+    ws: Blockly.WorkspaceSvg, 
+    runButtonId: string,
+    setGeneratedCodeList: Dispatch<Array<string>>, 
+    setCurrentWarnings: Dispatch<Map<string, string | null>>,
+    setRunButtonDisabled: Dispatch<boolean>,
+    setRunButtonTitle: Dispatch<string>) => {
     const runButton = document.getElementById(runButtonId);
 
     let successLoad = false;
@@ -46,16 +52,15 @@ export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, 
 
     /**
      * Enable or disable the run button based on the presence of warnings
-     * @param runButton The run button element
      * @param warnings The map of warnings
      * @returns whether a warning is set
      */
-    const enableDisableRunButton = (runButton: HTMLButtonElement, warnings: Map<string, string | null>): boolean => {
+    const enableDisableRunButton = (warnings: Map<string, string | null>): boolean => {
         for (const [_, value] of warnings.entries()) {
             if (value) {
                 // warnings exist
-                runButton.disabled = true;
-                runButton.title = "Fix the warning before generating code: " + value;
+                setRunButtonDisabled(true);
+                setRunButtonTitle("Fix the warning before generating code: " + value)
                 return true;
             }
         }
@@ -380,15 +385,14 @@ export const workspaceHandler = (ws: Blockly.WorkspaceSvg, runButtonId: string, 
 
         // Update all the warnings
         updateCurrentWarnings();
-        if (runButton instanceof HTMLButtonElement) {
-            var haveWarnings = enableDisableRunButton(runButton, current_warnings);
-            if (haveWarnings) return;
+        var haveWarnings = enableDisableRunButton(current_warnings);
+        if (haveWarnings) return;
 
-            // all warnings are cleared
-            runButton.disabled = false;
-            current_warnings.clear();
-            setCurrentWarnings(current_warnings);
-        }
+        // all warnings are cleared
+        setRunButtonDisabled(false);
+        setRunButtonTitle("Simulate Model");
+        current_warnings.clear();
+        setCurrentWarnings(current_warnings);
     }
 
     /**

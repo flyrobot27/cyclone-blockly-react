@@ -64,9 +64,7 @@ export const saveFile = function(workspace: Blockly.WorkspaceSvg, current_warnin
 export const load = function(workspace: Blockly.Workspace): [boolean, Map<string, string | null>]{
   try {
     const data = window.localStorage?.getItem(workspaceStorageKey);
-    console.log("here");
     if (!data) return [false, new Map<string, string | null>()];
-    console.log(data);
     var current_warnings_string = window.localStorage?.getItem(warningStorageKey);
     if (!current_warnings_string) current_warnings_string = '{}';
     var current_warnings: Map<string, string | null> = new Map(Object.entries(JSON.parse(current_warnings_string)))

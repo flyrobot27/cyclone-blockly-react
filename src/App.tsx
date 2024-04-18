@@ -5,14 +5,19 @@ import { toolbox } from './blocklyEditor/toolbox';
 import Blockly from "blockly";
 import { workspaceHandler } from './blocklyEditor/workspaceHandlers';
 import './App.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
-import { FileJson, save, saveFile, storageOverride } from './blocklyEditor/serialization';
+import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
+
+Blockly.common.defineBlocks(blocks);
+Object.assign(cycloneGenerator.forBlock, forBlock);
+
+const Endpoint = "http://localhost:8080/api/cyclone";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -60,15 +65,14 @@ function a11yProps(index: number) {
 }
 
 function App() {
-  Blockly.common.defineBlocks(blocks);
-  Object.assign(cycloneGenerator.forBlock, forBlock);
 
   const [generatedCodeList, setGeneratedCodeList] = useState(Array<string>());
   const [value, setValue] = useState(0);
 
   const [workspace, setWorkspace] = useState<Blockly.WorkspaceSvg | null>(null);
-
   const [currentWarnings, setCurrentWarnings] = useState(new Map<string, string | null>());
+  const [runButtonDisabled, setRunButtonDisabled] = useState(false);
+  const [runButtonTitle, setRunButtonTitle] = useState("Simulate Model");
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -76,7 +80,7 @@ function App() {
 
   function setWorkspaceHandler(workspace: Blockly.WorkspaceSvg) {
     setWorkspace(workspace);
-    workspaceHandler(workspace, "RunCode", setGeneratedCodeList, setCurrentWarnings);
+    workspaceHandler(workspace, "RunCode", setGeneratedCodeList, setCurrentWarnings, setRunButtonDisabled, setRunButtonTitle);
   }
 
   function workspaceChange(workspace: Blockly.WorkspaceSvg) {
@@ -109,8 +113,12 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    console.log(generatedCodeList);
+  }, [generatedCodeList]);
+
   return (
-    <div>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Blockly Editor" {...a11yProps(0)} />
@@ -118,7 +126,7 @@ function App() {
         </Tabs>
       </Box>
       <TopTabPanel value={value} index={0}>
-        <Button id="RunCode">Simulate Model</Button>
+        <Button id="RunCode" disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
         <Button component="label" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
         <Button
           component="label"
@@ -146,7 +154,7 @@ function App() {
       </TopTabPanel>
       <TopTabPanel value={value} index={1}>
       </TopTabPanel>
-    </div>
+    </>
   )
 }
 
