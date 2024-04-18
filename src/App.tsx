@@ -89,8 +89,15 @@ function App() {
 
   function workspaceChange(workspace: Blockly.WorkspaceSvg) {
     setWorkspace(workspace);
+
+    // check if workspace have no blocks
+    if (workspace.getAllBlocks().length === 0) {
+      setRunButtonDisabled(true);
+      setRunButtonTitle("No blocks to simulate");
+    }
   }
 
+  // Save workspace to file
   function onSaveWorkspaceClicked() {
     if (!workspace) {
       alert("No workspace to save");
@@ -99,6 +106,7 @@ function App() {
     saveFile(workspace, currentWarnings, "model.json");
   }
 
+  // read file
   function fileLoaded() {
     const inputElement = document.getElementById("ModelUpload") as HTMLInputElement;
     if (!inputElement.files) return;
@@ -109,6 +117,7 @@ function App() {
       reader.readAsText(file, "UTF-8");
       reader.onload = function (_e) {
         if (reader.result) {
+          // store to storage key. Reload page to apply changes
           const fileJson: FileJson = JSON.parse(reader.result as string);
           storageOverride(fileJson.workspaceData, fileJson.warnings);
           window.location.reload();
@@ -133,7 +142,6 @@ function App() {
     postToSimphony(data, setSimphonyResultProps);
   }, [runButtonClicked]);
 
-  console.log(runButtonDisabled);
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
