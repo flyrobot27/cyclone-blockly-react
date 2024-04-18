@@ -133,6 +133,7 @@ function App() {
     postToSimphony(data, setSimphonyResultProps);
   }, [runButtonClicked]);
 
+  console.log(runButtonDisabled);
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -142,7 +143,9 @@ function App() {
         </Tabs>
       </Box>
       <TopTabPanel value={value} index={0}>
-        <Button id="RunCode" className="bg-blue-500 text-white mb-6 mr-4" disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
+        <Button id="RunCode" className={
+          runButtonDisabled? "bg-gray-500 text-white mb-6 mr-4": "bg-blue-500 text-white mb-6 mr-4"
+        } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
         <Button component="label" className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
         <Button
           component="label"
