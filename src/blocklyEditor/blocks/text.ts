@@ -5,7 +5,6 @@
  */
 
 import * as Blockly from 'blockly/core';
-import { string } from 'blockly/core/utils';
 import BlockNames from './names';
 
 // Create a custom block called 'add_text' that adds
