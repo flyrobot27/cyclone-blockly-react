@@ -27,48 +27,48 @@ export function postToSimphony(data: any, setResultProps: Dispatch<ResultViewPro
         intrinsicResultJson.forEach((element: any, key: string) => {
             let elementMap = new Map(Object.entries(element));
             intrinsicResult.push({
-                elementName: key,
-                min: elementMap.get("min") as number,
-                max: elementMap.get("max") as number,
-                mean: elementMap.get("mean") as number,
-                stdDev: elementMap.get("stdDev") as number,
-                current: elementMap.get("current") as number
+            elementName: key,
+            min: elementMap.get("min") as string,
+            max: elementMap.get("max") as string,
+            mean: elementMap.get("mean") as string,
+            stdDev: elementMap.get("stdDev") as string,
+            current: elementMap.get("current") as string
             });
         });
 
         nonintrinsicResultJson.forEach((element: any, key: string) => {
             let elementMap = new Map(Object.entries(element));
             nonintrinsicResult.push({
-                elementName: key,
-                min: elementMap.get("min") as number,
-                max: elementMap.get("max") as number,
-                mean: elementMap.get("mean") as number,
-                stdDev: elementMap.get("stdDev") as number,
-                observationCount: elementMap.get("observationCount") as number
+            elementName: key,
+            min: elementMap.get("min") as string,
+            max: elementMap.get("max") as string,
+            mean: elementMap.get("mean") as string,
+            stdDev: elementMap.get("stdDev") as string,
+            observationCount: elementMap.get("observationCount") as string
             });
         });
 
         counterResultJson.forEach((element: any, key: string) => {
             let elementMap = new Map(Object.entries(element));
             counterResult.push({
-                elementName: key,
-                finalCount: elementMap.get("finalCount") as number,
-                productionRate: elementMap.get("productionRate") as number,
-                averageInterArrivalTime: elementMap.get("averageInterArrivalTime") as number,
-                firstArrival: elementMap.get("firstArrival") as number,
-                lastArrival: elementMap.get("lastArrival") as number
+            elementName: key,
+            finalCount: elementMap.get("finalCount") as string,
+            productionRate: elementMap.get("productionRate") as string,
+            averageInterArrivalTime: elementMap.get("averageInterArrivalTime") as string,
+            firstArrival: elementMap.get("firstArrival") as string,
+            lastArrival: elementMap.get("lastArrival") as string
             });
         });
 
         waitingFileResultJson.forEach((element: any, key: string) => {
             let elementMap = new Map(Object.entries(element));
             waitingFileResult.push({
-                elementName: key,
-                averageLength: elementMap.get("averageLength") as number,
-                stdDev: elementMap.get("stdDev") as number,
-                maxLength: elementMap.get("maxLength") as number,
-                currentLength: elementMap.get("currentLength") as number,
-                avgWaitTime: elementMap.get("avgWaitTime") as number
+            elementName: key,
+            averageLength: elementMap.get("averageLength") as string,
+            stdDev: elementMap.get("stdDev") as string,
+            maxLength: elementMap.get("maxLength") as string,
+            currentLength: elementMap.get("currentLength") as string,
+            avgWaitTime: elementMap.get("avgWaitTime") as string
             });
         });
 

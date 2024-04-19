@@ -19,38 +19,38 @@ export interface ResultViewProps {
 
 export interface IRRow {
     elementName: string;
-    min: number;
-    max: number;
-    mean: number;
-    stdDev: number;
-    current: number;
+    min: string;
+    max: string;
+    mean: string;
+    stdDev: string;
+    current: string;
 }
 
 export interface NIRRow {
     elementName: string;
-    min: number;
-    max: number;
-    mean: number;
-    stdDev: number;
-    observationCount: number;
+    min: string;
+    max: string;
+    mean: string;
+    stdDev: string;
+    observationCount: string;
 }
 
 export interface CounterRow {
     elementName: string;
-    finalCount: number;
-    productionRate: number;
-    averageInterArrivalTime: number;
-    firstArrival: number;
-    lastArrival: number;
+    finalCount: string;
+    productionRate: string;
+    averageInterArrivalTime: string;
+    firstArrival: string;
+    lastArrival: string;
 }
 
 export interface WFRow {
     elementName: string;
-    averageLength: number;
-    stdDev: number;
-    maxLength: number;
-    currentLength: number;
-    avgWaitTime: number;
+    averageLength: string;
+    stdDev: string;
+    maxLength: string;
+    currentLength: string;
+    avgWaitTime: string;
 }
 
 function ResultView(props: ResultViewProps | null): JSX.Element {
@@ -90,11 +90,11 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                             <TableCell component="th" scope="row">
                                 {row.elementName}
                             </TableCell>
-                            <TableCell align="right">{row.mean.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.stdDev.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.min.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.max.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.current.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.mean}</TableCell>
+                            <TableCell align="right">{row.stdDev}</TableCell>
+                            <TableCell align="right">{row.min}</TableCell>
+                            <TableCell align="right">{row.max}</TableCell>
+                            <TableCell align="right">{row.current}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -118,11 +118,11 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                             <TableCell component="th" scope="row">
                                 {row.elementName}
                             </TableCell>
-                            <TableCell align="right">{row.mean.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.stdDev.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.observationCount.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.min.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.max.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.mean}</TableCell>
+                            <TableCell align="right">{row.stdDev}</TableCell>
+                            <TableCell align="right">{row.observationCount}</TableCell>
+                            <TableCell align="right">{row.min}</TableCell>
+                            <TableCell align="right">{row.max}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -146,11 +146,11 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                             <TableCell component="th" scope="row">
                                 {row.elementName}
                             </TableCell>
-                            <TableCell align="right">{row.finalCount.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.productionRate.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.averageInterArrivalTime.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.firstArrival.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.lastArrival.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.finalCount}</TableCell>
+                            <TableCell align="right">{row.productionRate}</TableCell>
+                            <TableCell align="right">{row.averageInterArrivalTime}</TableCell>
+                            <TableCell align="right">{row.firstArrival}</TableCell>
+                            <TableCell align="right">{row.lastArrival}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -174,11 +174,11 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                             <TableCell component="th" scope="row">
                                 {row.elementName}
                             </TableCell>
-                            <TableCell align="right">{row.averageLength.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.stdDev.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.maxLength.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.currentLength.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.avgWaitTime.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.averageLength}</TableCell>
+                            <TableCell align="right">{row.stdDev}</TableCell>
+                            <TableCell align="right">{row.maxLength}</TableCell>
+                            <TableCell align="right">{row.currentLength}</TableCell>
+                            <TableCell align="right">{row.avgWaitTime}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
