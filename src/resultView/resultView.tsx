@@ -77,10 +77,10 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                 <TableHead>
                     <TableRow>
                         <TableCell className="font-bold">Element Name</TableCell>
-                        <TableCell align='right' className="font-bold">Minimum Value</TableCell>
-                        <TableCell align='right' className="font-bold">Maximum Value</TableCell>
                         <TableCell align='right' className="font-bold">Mean</TableCell>
                         <TableCell align='right' className="font-bold">Standard Deviasion</TableCell>
+                        <TableCell align='right' className="font-bold">Minimum Value</TableCell>
+                        <TableCell align='right' className="font-bold">Maximum Value</TableCell>
                         <TableCell align='right' className="font-bold">Current Value</TableCell>
                     </TableRow>
                 </TableHead>
@@ -90,10 +90,10 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                             <TableCell component="th" scope="row">
                                 {row.elementName}
                             </TableCell>
-                            <TableCell align="right">{row.min.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.max.toFixed(3)}</TableCell>
                             <TableCell align="right">{row.mean.toFixed(3)}</TableCell>
                             <TableCell align="right">{row.stdDev.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.min.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.max.toFixed(3)}</TableCell>
                             <TableCell align="right">{row.current.toFixed(3)}</TableCell>
                         </TableRow>
                     ))}
@@ -105,11 +105,11 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                 <TableHead>
                     <TableRow>
                         <TableCell className="font-bold">Element Name</TableCell>
-                        <TableCell align='right' className="font-bold">Minimum Value</TableCell>
-                        <TableCell align='right' className="font-bold">Maximum Value</TableCell>
                         <TableCell align='right' className="font-bold">Mean</TableCell>
                         <TableCell align='right' className="font-bold">Standard Deviasion</TableCell>
                         <TableCell align='right' className="font-bold">Observation Count</TableCell>
+                        <TableCell align='right' className="font-bold">Minimum Value</TableCell>
+                        <TableCell align='right' className="font-bold">Maximum Value</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -118,11 +118,11 @@ function ResultView(props: ResultViewProps | null): JSX.Element {
                             <TableCell component="th" scope="row">
                                 {row.elementName}
                             </TableCell>
-                            <TableCell align="right">{row.min.toFixed(3)}</TableCell>
-                            <TableCell align="right">{row.max.toFixed(3)}</TableCell>
                             <TableCell align="right">{row.mean.toFixed(3)}</TableCell>
                             <TableCell align="right">{row.stdDev.toFixed(3)}</TableCell>
                             <TableCell align="right">{row.observationCount.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.min.toFixed(3)}</TableCell>
+                            <TableCell align="right">{row.max.toFixed(3)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
