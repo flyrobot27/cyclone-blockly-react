@@ -18,7 +18,7 @@
     "react": "^18.2.0",
     "react-blockly": "^8.1.1",
     "react-dom": "^18.2.0",
-    "reagraph": "^4.16.1"
+    "reaflow": "^5.2.10"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",

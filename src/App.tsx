@@ -17,7 +17,6 @@ import ResultView from './resultView/resultView';
 import { postToSimphony } from './postToSimphony';
 import { ResultViewProps } from './resultView/resultView';
 import { CycloneView } from './cycloneView/cycloneView';
-import { GraphCanvas } from 'reagraph';
 
 Blockly.common.defineBlocks(blocks);
 Object.assign(cycloneGenerator.forBlock, forBlock);

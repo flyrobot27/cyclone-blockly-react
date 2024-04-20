@@ -1,27 +1,22 @@
-import { GraphCanvas } from 'reagraph';
+import { Canvas } from "reaflow";
 
 export function CycloneView() {
     return (
-        <div>
-            <GraphCanvas
-                nodes={[
-                    {
-                        id: 'n-1',
-                        label: '1'
-                    },
-                    {
-                        id: 'n-2',
-                        label: '2'
-                    }
-                ]}
-                edges={[
-                    {
-                        id: '1->2',
-                        source: 'n-1',
-                        target: 'n-2',
-                        label: 'Edge 1-2'
-                    }
-                ]}
-            />
+        <div style={{
+            height: "90vh"
+        }}>
+            <Canvas 
+            readonly={true}
+            nodes={[{
+                id: '1',
+                text: '1'
+            }, {
+                id: '2',
+                text: '2'
+            }]} edges={[{
+                id: '1-2',
+                from: '1',
+                to: '2'
+            }]} onLayoutChange={layout => console.log('Layout', layout)} />
         </div>);
 }
