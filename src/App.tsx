@@ -177,7 +177,7 @@ function App() {
         </Button>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
-          className="fill-height"
+          className="h-[80vh]"
           workspaceConfiguration={{
             grid: {
               spacing: 20,
