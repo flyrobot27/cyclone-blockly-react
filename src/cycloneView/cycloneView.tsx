@@ -8,7 +8,7 @@ export function CycloneView() {
                 readonly={true}
                 nodes={[{
                     id: '1',
-                    text: '1',
+                    text: '1 - Laborer Idle',
                     icon: {
                         url: combi,
                         width: 50,

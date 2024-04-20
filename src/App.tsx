@@ -3,7 +3,7 @@ import { forBlock, cycloneGenerator } from './blocklyEditor/generators/cyclone';
 import { blocks } from './blocklyEditor/blocks/text';
 import { toolbox } from './blocklyEditor/toolbox';
 import Blockly from "blockly";
-import { workspaceHandler } from './blocklyEditor/workspaceHandlers';
+import { workspaceHandler, generateCode } from './blocklyEditor/workspaceHandlers';
 import './App.css'
 import { useEffect, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
@@ -151,6 +151,20 @@ function App() {
     postToSimphony(data, setSimphonyResultProps);
     setSentToSimphony(true);
   }, [runButtonClicked]);
+
+  // check if current warnings are empty. If not, generate code (Used for sending to cyclone view)
+  useEffect(() => {
+    let hasWarnings = false;
+    currentWarnings.forEach((value) => {
+      if (value) {
+        hasWarnings = true;
+      }
+    });
+
+    if (workspace && !hasWarnings) {
+      setGeneratedCodeList(generateCode(workspace));
+    }
+  }, [currentWarnings.size]);
 
   return (
     <>
