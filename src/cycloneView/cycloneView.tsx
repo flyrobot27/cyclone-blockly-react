@@ -1,5 +1,10 @@
 import { Canvas, Icon, Node } from "reaflow";
-import combi from "./icons/combi.png";
+import combiIcon from "./icons/combi.png";
+import normalImage from "./icons/normal.png";
+import queueImage from "./icons/queue.png";
+import consolidateImage from "./icons/consolidate.png";
+import counterImage from "./icons/counter.png";
+import BlockNames from "../blocklyEditor/blocks/names";
 
 interface ModelCode {
     networkInput: Array<NetworkElement | NetworkElementWithFollowers | NetworkElementWithFollowersPreceders>;
@@ -49,9 +54,35 @@ function codeToNode (codeJson: ModelCode) {
         let id = node.label.toString();
         let description = node.description || node.type.toLowerCase();
         let text = `${id} - ${description}`;
+
+        let icon = "";
+
+        switch (node.type) {
+            case BlockNames.NetworkBlockTypes.Combi:
+                icon = combiIcon;
+                break;
+            case BlockNames.NetworkBlockTypes.Normal:
+                icon = normalImage;
+                break;
+            case BlockNames.NetworkBlockTypes.Queue:
+                icon = queueImage;
+                break;
+            case BlockNames.NetworkBlockTypes.Consolidate:
+                icon = consolidateImage;
+                break;
+            case BlockNames.NetworkBlockTypes.Counter:
+                icon = counterImage;
+                break;
+        }
+
         return {
             id: id,
-            text: text
+            text: text,
+            icon: {
+                url: icon,
+                width: 60,
+                height: 60
+            }
         }
     });
     return nodes;

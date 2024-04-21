@@ -166,6 +166,21 @@ class BlockNames {
         static Type = "description";
         static Description = "DESCRIPTION";
     }
+
+    static NetworkBlockTypes = class {
+        static Combi = "COMBI";
+        static Normal = "NORMAL";
+        static Queue = "QUEUE";
+        static Consolidate = "FUNCTION_CONSOLIDATE";
+        static Counter = "FUNCTION_COUNTER";
+    }
+
+    static ReferenceBlockTypes = class {
+        static Combi = "REF_COMBI";
+        static Normal = "REF_NORMAL";
+        static Queue = "REF_QUEUE";
+        static Function = "REF_FUNCTION";
+    }
 }
 
 export default BlockNames;
