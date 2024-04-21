@@ -31,6 +31,18 @@ interface NetworkElementReference {
     value: number;
 }
 
+interface GraphNode {
+    id: string;
+    text: string;
+}
+
+interface GraphEdge {
+    id: string;
+    from: string;
+    to: string;
+}
+
+
 function codeToNode (codeJson: ModelCode) {
 
     let nodes = codeJson.networkInput.map((node, _index) => {
@@ -82,14 +94,51 @@ export function CycloneView(props: { codeList: string[] | null}) {
         return <></>
     }
     
-    let nodes = Array<any>();
-    let edges = Array<any>();
+    let nodes = Array<GraphNode>();
+    let edges = Array<GraphEdge>();
 
     props.codeList.forEach((codeString, _index) => {
         let code: ModelCode = JSON.parse(codeString);
         nodes = nodes.concat(codeToNode(code));
         edges = edges.concat(codeToEdges(code));
     });
+
+    // sort edge list based on "from" and "to" values
+    edges.sort((a, b) => {
+        let aFrom = parseInt(a.from);
+        let bFrom = parseInt(b.from);
+        let aTo = parseInt(a.to);
+        let bTo = parseInt(b.to);
+        if (aFrom < bFrom) {
+            return -1;
+        } else if (aFrom > bFrom) {
+            return 1;
+        } else {
+            if (aTo < bTo) {
+                return -1;
+            } else if (aTo > bTo) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    });
+
+    // sort node list based on "id" values
+    nodes.sort((a, b) => {
+        let aId = parseInt(a.id);
+        let bId = parseInt(b.id);
+        if (aId < bId) {
+            return -1;
+        } else if (aId > bId) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+
+    console.log(JSON.stringify(nodes, null, 2));
+    console.log(JSON.stringify(edges, null, 2));
 
     return (
         <div className="h-[88vh]">
