@@ -10,7 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
 import ResultView from './resultView/resultView';
@@ -29,8 +29,7 @@ interface TabPanelProps {
 
 class TabIds {
   static Editor = 0;
-  static Cyclone = 1;
-  static Result = 2;
+  static Result = 1;
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -165,7 +164,7 @@ function App() {
 
   // check if current warnings are empty. If not, generate code (Used for sending to cyclone view)
   useEffect(() => {
-    let hasWarnings = checkIfWarningEmpty(currentWarnings);    
+    let hasWarnings = checkIfWarningEmpty(currentWarnings);
 
     if (workspace && !hasWarnings) {
       setGeneratedCodeList(generateCode(workspace));
@@ -177,7 +176,6 @@ function App() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Blockly Editor" {...a11yProps(TabIds.Editor)} />
-          <Tab label="Cyclone View" disabled={runButtonDisabled} {...a11yProps(TabIds.Cyclone)} />
           <Tab label="Result View" {...a11yProps(TabIds.Result)} />
         </Tabs>
       </Box>
@@ -195,23 +193,28 @@ function App() {
         >Load Model from file
           <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
         </Button>
-        <BlocklyWorkspace
-          toolboxConfiguration={toolbox}
-          className="h-[80vh]"
-          workspaceConfiguration={{
-            grid: {
-              spacing: 20,
-              length: 3,
-              colour: "#ccc",
-              snap: true
-            }
-          }}
-          onInject={onWorkspaceInject}
-          onWorkspaceChange={workspaceChange}
-        />
-      </TopTabPanel>
-      <TopTabPanel value={value} index={TabIds.Cyclone}>
-        <CycloneView codeList={generatedCodeList}></CycloneView>
+        <Grid container spacing={2}>
+          <Grid item xs={7}>
+            <BlocklyWorkspace
+              toolboxConfiguration={toolbox}
+              className="h-[80vh]"
+              workspaceConfiguration={{
+                grid: {
+                  spacing: 20,
+                  length: 3,
+                  colour: "#ccc",
+                  snap: true
+                }
+              }}
+              onInject={onWorkspaceInject}
+              onWorkspaceChange={workspaceChange}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <CycloneView codeList={generatedCodeList}></CycloneView>
+          </Grid>
+        </Grid>
+
       </TopTabPanel>
       <TopTabPanel value={value} index={TabIds.Result}>
         {sentToSimphony && (

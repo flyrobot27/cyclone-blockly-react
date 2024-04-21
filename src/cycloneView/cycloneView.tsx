@@ -5,6 +5,7 @@ import queueImage from "./icons/queue.png";
 import consolidateImage from "./icons/consolidate.png";
 import counterImage from "./icons/counter.png";
 import BlockNames from "../blocklyEditor/blocks/names";
+import { useRef, useState } from "react";
 
 interface ModelCode {
     networkInput: Array<NetworkElement | NetworkElementWithFollowers | NetworkElementWithFollowersPreceders>;
@@ -48,7 +49,7 @@ interface GraphEdge {
 }
 
 
-function codeToNode (codeJson: ModelCode) {
+function codeToNode(codeJson: ModelCode) {
 
     let nodes = codeJson.networkInput.map((node, _index) => {
         let id = node.label.toString();
@@ -88,7 +89,7 @@ function codeToNode (codeJson: ModelCode) {
     return nodes;
 }
 
-function codeToEdges (codeJson: ModelCode) {
+function codeToEdges(codeJson: ModelCode) {
     let edges = Array<any>();
     codeJson.networkInput.forEach((node, _index) => {
         if ('followers' in node) {
@@ -119,64 +120,97 @@ function codeToEdges (codeJson: ModelCode) {
 }
 
 
-export function CycloneView(props: { codeList: string[] | null}) {
-    
-    if (!props.codeList) {
-        return <></>
-    }
-    
+export function CycloneView(props: { codeList: string[] | null }) {
+
     let nodes = Array<GraphNode>();
     let edges = Array<GraphEdge>();
 
-    props.codeList.forEach((codeString, _index) => {
-        let code: ModelCode = JSON.parse(codeString);
-        nodes = nodes.concat(codeToNode(code));
-        edges = edges.concat(codeToEdges(code));
-    });
+    if (props.codeList) {
+        props.codeList.forEach((codeString, _index) => {
+            let code: ModelCode = JSON.parse(codeString);
+            nodes = nodes.concat(codeToNode(code));
+            edges = edges.concat(codeToEdges(code));
+        });
 
-    // sort edge list based on "from" and "to" values
-    edges.sort((a, b) => {
-        let aFrom = parseInt(a.from);
-        let bFrom = parseInt(b.from);
-        let aTo = parseInt(a.to);
-        let bTo = parseInt(b.to);
-        if (aFrom < bFrom) {
-            return -1;
-        } else if (aFrom > bFrom) {
-            return 1;
-        } else {
-            if (aTo < bTo) {
+        // sort edge list based on "from" and "to" values
+        edges.sort((a, b) => {
+            let aFrom = parseInt(a.from);
+            let bFrom = parseInt(b.from);
+            let aTo = parseInt(a.to);
+            let bTo = parseInt(b.to);
+            if (aFrom < bFrom) {
                 return -1;
-            } else if (aTo > bTo) {
+            } else if (aFrom > bFrom) {
+                return 1;
+            } else {
+                if (aTo < bTo) {
+                    return -1;
+                } else if (aTo > bTo) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        // sort node list based on "id" values
+        nodes.sort((a, b) => {
+            let aId = parseInt(a.id);
+            let bId = parseInt(b.id);
+            if (aId < bId) {
+                return -1;
+            } else if (aId > bId) {
                 return 1;
             } else {
                 return 0;
             }
-        }
+        });
+    }
+
+    // Mouse Scrolling
+    const canvasDivRef = useRef(null);
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const mouseCoords = useRef({
+        startX: 0,
+        startY: 0,
+        scrollLeft: 0,
+        scrollTop: 0
     });
-
-    // sort node list based on "id" values
-    nodes.sort((a, b) => {
-        let aId = parseInt(a.id);
-        let bId = parseInt(b.id);
-        if (aId < bId) {
-            return -1;
-        } else if (aId > bId) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
-
-    console.log(JSON.stringify(nodes, null, 2));
-    console.log(JSON.stringify(edges, null, 2));
-
+    // const [isScrolling, setIsScrolling] = useState(false);
+    const handleDragStart = (e: { pageX: number; pageY: number; }) => {
+        if (!canvasDivRef.current) return;
+        const slider = (canvasDivRef.current as any).children[0];
+        const startX = e.pageX - slider.offsetLeft;
+        const startY = e.pageY - slider.offsetTop;
+        const scrollLeft = slider.scrollLeft;
+        const scrollTop = slider.scrollTop;
+        mouseCoords.current = { startX, startY, scrollLeft, scrollTop };
+        setIsMouseDown(true);
+        document.body.style.cursor = "grabbing";
+    }
+    const handleDragEnd = () => {
+        setIsMouseDown(false)
+        if (!canvasDivRef.current) return
+        document.body.style.cursor = "default"
+    }
+    const handleDrag = (e: { preventDefault: () => void; pageX: number; pageY: number; }) => {
+        if (!isMouseDown || !canvasDivRef.current) return;
+        e.preventDefault();
+        const slider = (canvasDivRef.current as any).children[0];
+        const x = e.pageX - slider.offsetLeft;
+        const y = e.pageY - slider.offsetTop;
+        const walkX = (x - mouseCoords.current.startX) * 1.5;
+        const walkY = (y - mouseCoords.current.startY) * 1.5;
+        slider.scrollLeft = mouseCoords.current.scrollLeft - walkX;
+        slider.scrollTop = mouseCoords.current.scrollTop - walkY;
+        console.log(walkX, walkY)
+    }
     return (
-        <div className="h-[88vh]">
+        <div ref={canvasDivRef} onMouseDown={handleDragStart} onMouseUp={handleDragEnd} onMouseMove={handleDrag} className="flex overflow-x-scroll h-[80vh]">
             <Canvas className="bg-gray-100"
                 readonly={true}
                 nodes={nodes}
                 edges={edges}
-                node={<Node icon={<Icon/>} draggable={true}/>} />
+                node={<Node icon={<Icon />} draggable={true} />} />
         </div>);
 }
