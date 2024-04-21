@@ -72,6 +72,17 @@ function a11yProps(index: number) {
   };
 }
 
+function checkIfWarningEmpty(warnings: Map<string, string | null>) {
+  let hasWarnings = false;
+  warnings.forEach((value) => {
+    if (value) {
+      hasWarnings = true;
+    }
+  });
+
+  return hasWarnings;
+}
+
 function App() {
 
   const [generatedCodeList, setGeneratedCodeList] = useState(Array<string>());
@@ -91,7 +102,7 @@ function App() {
     setValue(newValue);
   };
 
-  function setWorkspaceHandler(workspace: Blockly.WorkspaceSvg) {
+  function onWorkspaceInject(workspace: Blockly.WorkspaceSvg) {
     setWorkspace(workspace);
     workspaceHandler(workspace, "RunCode", setGeneratedCodeList, setCurrentWarnings, setRunButtonDisabled, setRunButtonTitle, setRunButtonClicked);
   }
@@ -154,12 +165,7 @@ function App() {
 
   // check if current warnings are empty. If not, generate code (Used for sending to cyclone view)
   useEffect(() => {
-    let hasWarnings = false;
-    currentWarnings.forEach((value) => {
-      if (value) {
-        hasWarnings = true;
-      }
-    });
+    let hasWarnings = checkIfWarningEmpty(currentWarnings);    
 
     if (workspace && !hasWarnings) {
       setGeneratedCodeList(generateCode(workspace));
@@ -200,12 +206,12 @@ function App() {
               snap: true
             }
           }}
-          onInject={setWorkspaceHandler}
+          onInject={onWorkspaceInject}
           onWorkspaceChange={workspaceChange}
         />
       </TopTabPanel>
       <TopTabPanel value={value} index={TabIds.Cyclone}>
-        <CycloneView></CycloneView>
+        <CycloneView codeList={generatedCodeList}></CycloneView>
       </TopTabPanel>
       <TopTabPanel value={value} index={TabIds.Result}>
         {sentToSimphony && (

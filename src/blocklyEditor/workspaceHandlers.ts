@@ -709,6 +709,19 @@ export const workspaceHandler = (
     updateRefLabels();
     // Validate all blocks on load
     validateBlocks();
+
+    // generate code list if no warnings
+    let hasWarnings = false;
+    current_warnings.forEach((value) => {
+    if (value) {
+        hasWarnings = true;
+    }
+    });
+
+    if (!hasWarnings) {
+        var codes = generateCode(ws);
+        setGeneratedCodeList(codes);
+    }
 }
 
 export const generateCode = (workspace: Blockly.WorkspaceSvg) => {
