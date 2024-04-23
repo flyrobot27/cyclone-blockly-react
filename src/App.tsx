@@ -187,10 +187,14 @@ function App() {
         </Tabs>
       </Box>
       <TopTabPanel value={value} index={TabIds.Editor}>
-        <Button id="RunCode" className={
-          runButtonDisabled ? "bg-gray-500 text-white mb-6 mr-4" : "bg-blue-500 text-white mb-6 mr-4"
-        } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
-        <Button component="label" className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
+        <Button id="RunCode"
+          variant="contained"
+          className={
+            runButtonDisabled ? "bg-gray-500 text-white mb-6 mr-4" : "bg-blue-500 text-white mb-6 mr-4"
+          } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
+        <Button component="label"
+          variant="contained"
+          className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
         <Button
           component="label"
           role={undefined}
@@ -200,7 +204,10 @@ function App() {
         >Load Model from file
           <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
         </Button>
-        <Button onClick={toggleCycloneView(true)}>
+        <Button onClick={toggleCycloneView(true)}
+          variant="contained"
+
+          className='bg-red-600 text-white mb-6 mr-4'>
           Open Cyclone Diagram View
         </Button>
         <BlocklyWorkspace
@@ -212,6 +219,16 @@ function App() {
               length: 3,
               colour: "#ccc",
               snap: true
+            },
+            zoom:
+            {
+              controls: true,
+              wheel: true,
+              startScale: 1.0,
+              maxScale: 3,
+              minScale: 0.3,
+              scaleSpeed: 1.1,
+              pinch: true,
             }
           }}
           onInject={onWorkspaceInject}
