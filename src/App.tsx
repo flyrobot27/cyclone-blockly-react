@@ -10,13 +10,14 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Button, Grid } from '@mui/material';
+import { Button } from '@mui/material';
 import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
 import ResultView from './resultView/resultView';
 import { postToSimphony } from './postToSimphony';
 import { ResultViewProps } from './resultView/resultView';
 import { CycloneView } from './cycloneView/cycloneView';
+import * as React from 'react';
 
 Blockly.common.defineBlocks(blocks);
 Object.assign(cycloneGenerator.forBlock, forBlock);
@@ -97,7 +98,11 @@ function App() {
   const [sentToSimphony, setSentToSimphony] = useState(false);
   const [simphonyResultProps, setSimphonyResultProps] = useState<ResultViewProps | null>(null);
 
-  const [showGraph, setShowGraph] = useState(true);
+  const [showCycloneView, setShowCycloneView] = useState(false);
+
+  const toggleCycloneView = (open: boolean) => () => {
+    setShowCycloneView(open);
+  }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -195,6 +200,9 @@ function App() {
         >Load Model from file
           <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
         </Button>
+        <Button onClick={toggleCycloneView(true)}>
+          Open Cyclone Diagram View
+        </Button>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
           className="h-[80vh]"
@@ -209,8 +217,10 @@ function App() {
           onInject={onWorkspaceInject}
           onWorkspaceChange={workspaceChange}
         />
-        <CycloneView codeList={generatedCodeList}></CycloneView>
       </TopTabPanel>
+      <React.Fragment>
+        <CycloneView codeList={generatedCodeList} showCycloneView={showCycloneView} toggleCycloneView={toggleCycloneView} />
+      </React.Fragment>
       <TopTabPanel value={value} index={TabIds.Result}>
         {sentToSimphony && (
           <ResultView data={simphonyResultProps?.data}></ResultView>

@@ -1,12 +1,12 @@
 import { Canvas, Icon, Label, Node } from "reaflow";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import combiIcon from "./icons/combi.png";
 import normalImage from "./icons/normal.png";
 import queueImage from "./icons/queue.png";
 import consolidateImage from "./icons/consolidate.png";
 import counterImage from "./icons/counter.png";
 import BlockNames from "../blocklyEditor/blocks/names";
-import { useRef, useState } from "react";
+import { Drawer, Box } from "@mui/material";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 interface ModelCode {
     networkInput: Array<NetworkElement | NetworkElementWithFollowers | NetworkElementWithFollowersPreceders>;
@@ -121,7 +121,7 @@ function codeToEdges(codeJson: ModelCode) {
 }
 
 
-export function CycloneView(props: { codeList: string[] | null }) {
+export function CycloneView(props: { codeList: string[] | null, showCycloneView: boolean, toggleCycloneView: (open: boolean) => () => void }) {
 
     let nodes = Array<GraphNode>();
     let edges = Array<GraphEdge>();
@@ -167,75 +167,47 @@ export function CycloneView(props: { codeList: string[] | null }) {
             }
         });
     }
-
-    // Mouse Scrolling
-    const canvasDivRef = useRef(null);
-    const [isMouseDown, setIsMouseDown] = useState(false);
-    const mouseCoords = useRef({
-        startX: 0,
-        startY: 0,
-        scrollLeft: 0,
-        scrollTop: 0
-    });
-    // const [isScrolling, setIsScrolling] = useState(false);
-    const handleDragStart = (e: { pageX: number; pageY: number; }) => {
-        if (!canvasDivRef.current) return;
-        const slider = (canvasDivRef.current as any).children[0];
-        const startX = e.pageX - slider.offsetLeft;
-        const startY = e.pageY - slider.offsetTop;
-        const scrollLeft = slider.scrollLeft;
-        const scrollTop = slider.scrollTop;
-        mouseCoords.current = { startX, startY, scrollLeft, scrollTop };
-        setIsMouseDown(true);
-        document.body.style.cursor = "grabbing";
-    }
-    const handleDragEnd = () => {
-        setIsMouseDown(false)
-        if (!canvasDivRef.current) return
-        document.body.style.cursor = "default"
-    }
-    const handleDrag = (e: { preventDefault: () => void; pageX: number; pageY: number; }) => {
-        if (!isMouseDown || !canvasDivRef.current) return;
-        e.preventDefault();
-        const slider = (canvasDivRef.current as any).children[0];
-        const x = e.pageX - slider.offsetLeft;
-        const y = e.pageY - slider.offsetTop;
-        const walkX = (x - mouseCoords.current.startX) * 1.5;
-        const walkY = (y - mouseCoords.current.startY) * 1.5;
-        slider.scrollLeft = mouseCoords.current.scrollLeft - walkX;
-        slider.scrollTop = mouseCoords.current.scrollTop - walkY;
-    }
-
     return (
-        <div ref={canvasDivRef} onMouseDown={handleDragStart} onMouseUp={handleDragEnd} onMouseMove={handleDrag} className="flex overflow-x-scroll h-[80vh]">
-            <Canvas
-                zoomable={false}
-                readonly={true}
-                nodes={nodes}
-                edges={edges}
-                node={
-                    <Node
-                        style={{
-                            stroke: '#1a192b',
-                            fill: 'white',
-                            strokeWidth: 1
-                        }}
-                        icon={<Icon 
-                            style={{
-                                moveBy: { x: -30, y: -30 }
-                            }}
-                        />}
-                        draggable={true}
-                        label={
-                            <Label style={{
-                                fill: 'black',
-                                fontSize: 12,
-                                fontWeight: 'bold'
-                            }} 
-                        />}
-                    />
-                }
-            />
-        </div>
+        <Drawer open={props.showCycloneView} onClose={props.toggleCycloneView(false)} anchor="right">
+            <Box sx={{ width: "50vw", overflow: "hidden", height: "100vh" }}>
+                <TransformWrapper
+                    wheel={{ step: 40 }}
+                    limitToBounds={false}
+                    maxScale={4}>
+                    <TransformComponent>
+                        <Canvas
+                        className="w-[100vw] h-[100vh]"
+                            zoomable={false}
+                            readonly={true}
+                            fit={true}
+                            nodes={nodes}
+                            edges={edges}
+                            node={
+                                <Node
+                                    style={{
+                                        stroke: '#1a192b',
+                                        fill: 'white',
+                                        strokeWidth: 1
+                                    }}
+                                    icon={<Icon
+                                        style={{
+                                            moveBy: { x: -30, y: -30 }
+                                        }}
+                                    />}
+                                    draggable={true}
+                                    label={
+                                        <Label style={{
+                                            fill: 'black',
+                                            fontSize: 12,
+                                            fontWeight: 'bold'
+                                        }}
+                                        />}
+                                />
+                            }
+                        />
+                    </TransformComponent>
+                </TransformWrapper>
+            </Box>
+        </Drawer>
     );
 }
