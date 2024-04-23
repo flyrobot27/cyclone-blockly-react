@@ -1,4 +1,5 @@
-import { Canvas, Icon, Node } from "reaflow";
+import { Canvas, Icon, Label, Node } from "reaflow";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import combiIcon from "./icons/combi.png";
 import normalImage from "./icons/normal.png";
 import queueImage from "./icons/queue.png";
@@ -203,14 +204,38 @@ export function CycloneView(props: { codeList: string[] | null }) {
         const walkY = (y - mouseCoords.current.startY) * 1.5;
         slider.scrollLeft = mouseCoords.current.scrollLeft - walkX;
         slider.scrollTop = mouseCoords.current.scrollTop - walkY;
-        console.log(walkX, walkY)
     }
+
     return (
         <div ref={canvasDivRef} onMouseDown={handleDragStart} onMouseUp={handleDragEnd} onMouseMove={handleDrag} className="flex overflow-x-scroll h-[80vh]">
-            <Canvas className="bg-gray-100"
+            <Canvas
+                zoomable={false}
                 readonly={true}
                 nodes={nodes}
                 edges={edges}
-                node={<Node icon={<Icon />} draggable={true} />} />
-        </div>);
+                node={
+                    <Node
+                        style={{
+                            stroke: '#1a192b',
+                            fill: 'white',
+                            strokeWidth: 1
+                        }}
+                        icon={<Icon 
+                            style={{
+                                moveBy: { x: -30, y: -30 }
+                            }}
+                        />}
+                        draggable={true}
+                        label={
+                            <Label style={{
+                                fill: 'black',
+                                fontSize: 12,
+                                fontWeight: 'bold'
+                            }} 
+                        />}
+                    />
+                }
+            />
+        </div>
+    );
 }

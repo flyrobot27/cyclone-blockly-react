@@ -97,6 +97,8 @@ function App() {
   const [sentToSimphony, setSentToSimphony] = useState(false);
   const [simphonyResultProps, setSimphonyResultProps] = useState<ResultViewProps | null>(null);
 
+  const [showGraph, setShowGraph] = useState(true);
+
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -193,28 +195,21 @@ function App() {
         >Load Model from file
           <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
         </Button>
-        <Grid container spacing={2}>
-          <Grid item xs={7}>
-            <BlocklyWorkspace
-              toolboxConfiguration={toolbox}
-              className="h-[80vh]"
-              workspaceConfiguration={{
-                grid: {
-                  spacing: 20,
-                  length: 3,
-                  colour: "#ccc",
-                  snap: true
-                }
-              }}
-              onInject={onWorkspaceInject}
-              onWorkspaceChange={workspaceChange}
-            />
-          </Grid>
-          <Grid item xs={5}>
-            <CycloneView codeList={generatedCodeList}></CycloneView>
-          </Grid>
-        </Grid>
-
+        <BlocklyWorkspace
+          toolboxConfiguration={toolbox}
+          className="h-[80vh]"
+          workspaceConfiguration={{
+            grid: {
+              spacing: 20,
+              length: 3,
+              colour: "#ccc",
+              snap: true
+            }
+          }}
+          onInject={onWorkspaceInject}
+          onWorkspaceChange={workspaceChange}
+        />
+        <CycloneView codeList={generatedCodeList}></CycloneView>
       </TopTabPanel>
       <TopTabPanel value={value} index={TabIds.Result}>
         {sentToSimphony && (

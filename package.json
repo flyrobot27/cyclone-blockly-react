@@ -18,6 +18,7 @@
     "react": "^18.2.0",
     "react-blockly": "^8.1.1",
     "react-dom": "^18.2.0",
+    "react-zoom-pan-pinch": "^3.4.4",
     "reaflow": "^5.2.10"
   },
   "devDependencies": {
