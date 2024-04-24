@@ -101,6 +101,14 @@ function App() {
   const [showCycloneView, setShowCycloneView] = useState(false);
 
   const toggleCycloneView = (open: boolean) => () => {
+    let hasWarnings = checkIfWarningEmpty(currentWarnings);
+
+    if (workspace && !hasWarnings) {
+      setGeneratedCodeList(generateCode(workspace));
+    }
+    else {
+      setGeneratedCodeList([]);
+    }
     setShowCycloneView(open);
   }
 
@@ -169,15 +177,6 @@ function App() {
     setSentToSimphony(true);
   }, [runButtonClicked]);
 
-  // check if current warnings are empty. If not, generate code (Used for sending to cyclone view)
-  useEffect(() => {
-    let hasWarnings = checkIfWarningEmpty(currentWarnings);
-
-    if (workspace && !hasWarnings) {
-      setGeneratedCodeList(generateCode(workspace));
-    }
-  }, [currentWarnings.size]);
-
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -206,8 +205,7 @@ function App() {
         </Button>
         <Button onClick={toggleCycloneView(true)}
           variant="contained"
-
-          className='bg-red-600 text-white mb-6 mr-4'>
+          className='bg-orange-500 text-white mb-6 mr-4'>
           Open Cyclone Diagram View
         </Button>
         <BlocklyWorkspace
