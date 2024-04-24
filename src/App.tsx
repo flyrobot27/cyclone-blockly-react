@@ -101,14 +101,17 @@ function App() {
   const [showCycloneView, setShowCycloneView] = useState(false);
 
   const toggleCycloneView = (open: boolean) => () => {
-    let hasWarnings = checkIfWarningEmpty(currentWarnings);
+    if (open) {
+      let hasWarnings = checkIfWarningEmpty(currentWarnings);
 
-    if (workspace && !hasWarnings) {
-      setGeneratedCodeList(generateCode(workspace));
+      if (workspace && !hasWarnings) {
+        setGeneratedCodeList(generateCode(workspace));
+      }
+      else {
+        setGeneratedCodeList([]);
+      }
     }
-    else {
-      setGeneratedCodeList([]);
-    }
+
     setShowCycloneView(open);
   }
 
