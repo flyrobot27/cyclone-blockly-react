@@ -7,7 +7,6 @@ import counterImage from "./icons/counter.png";
 import BlockNames from "../blocklyEditor/blocks/names";
 import { Drawer, Box } from "@mui/material";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { useRef, useState } from "react";
 
 interface ModelCode {
   networkInput: Array<NetworkElement | NetworkElementWithFollowers | NetworkElementWithFollowersPreceders>;
