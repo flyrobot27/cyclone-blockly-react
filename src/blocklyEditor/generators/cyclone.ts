@@ -62,7 +62,7 @@ forBlock[BlockNames.CombiInputStatement.Type] = function (
 
   // TODO: Assemble javascript into code variable.
   var code = JSON.stringify({
-    "type": "COMBI",
+    "type": BlockNames.NetworkBlockTypes.Combi,
     "label": label,
     "set": JSON.parse(value_set_number),
     "description": value_description,
@@ -84,7 +84,7 @@ forBlock[BlockNames.NormalTaskInput.Type] = function (
   var statements_followers = generator.statementToCode(block, BlockNames.NormalTaskInput.Followers);
 
   var code = JSON.stringify({
-    "type": "NORMAL",
+    "type": BlockNames.NetworkBlockTypes.Normal,
     "label": label_n,
     "set": JSON.parse(value_set_number),
     "description": description,
@@ -105,7 +105,7 @@ forBlock[BlockNames.QueueInputStatement.Type] = function (
   var value_resource_input = generator.valueToCode(block, BlockNames.QueueInputStatement.ResourceInput, Order.ATOMIC);
 
   var codeJson: any = {
-    "type": "QUEUE",
+    "type": BlockNames.NetworkBlockTypes.Queue,
     "label": label_q,
     "description": text_description,
     "numberToBeGenerated": number_number_to_be_generated,
@@ -131,7 +131,7 @@ forBlock[BlockNames.FunctionConsolidateInput.Type] = function (
   var description = generator.valueToCode(block, BlockNames.FunctionConsolidateInput.Description, Order.ATOMIC);
 
   var code = JSON.stringify({
-    "type": "FUNCTION_CONSOLIDATE",
+    "type": BlockNames.NetworkBlockTypes.Consolidate,
     "label": label_fn,
     "numberToConsolidate": number_number_to_consolidate,
     "followers": JSON.parse(followers),
@@ -152,7 +152,7 @@ forBlock[BlockNames.FunctionCounterInput.Type] = function (
   var description = generator.valueToCode(block, BlockNames.FunctionCounterInput.Description, Order.ATOMIC);
 
   var code = JSON.stringify({
-    "type": "FUNCTION_COUNTER",
+    "type": BlockNames.NetworkBlockTypes.Counter,
     "label": number_label_fn,
     "quantity": number_quantity,
     "followers": JSON.parse(statements_followers),
@@ -170,7 +170,7 @@ forBlock[BlockNames.RefStatements.Type.Queue] = function (
   var dropdown_option = block.getFieldValue(BlockNames.RefStatements.DropdownLabel);
   var code = JSON.stringify(
     {
-      "type": "REF_QUEUE",
+      "type": BlockNames.ReferenceBlockTypes.Queue,
       "value": Number(dropdown_option)
     }, null, 2
   )
@@ -186,7 +186,7 @@ forBlock[BlockNames.RefStatements.Type.Combi] = function (
   var dropdown_option = block.getFieldValue(BlockNames.RefStatements.DropdownLabel);
   var code = JSON.stringify(
     {
-      "type": "REF_COMBI",
+      "type": BlockNames.ReferenceBlockTypes.Combi,
       "value": Number(dropdown_option)
     }, null, 2
   )
@@ -202,7 +202,7 @@ forBlock[BlockNames.RefStatements.Type.Normal] = function (
   var dropdown_option = block.getFieldValue(BlockNames.RefStatements.DropdownLabel);
   var code = JSON.stringify(
     {
-      "type": "REF_NORMAL",
+      "type": BlockNames.ReferenceBlockTypes.Normal,
       "value": Number(dropdown_option)
     }, null, 2
   )
@@ -218,7 +218,7 @@ forBlock[BlockNames.RefStatements.Type.Function] = function (
   var dropdown_option = block.getFieldValue(BlockNames.RefStatements.DropdownLabel);
   var code = JSON.stringify(
     {
-      "type": "REF_FUNCTION",
+      "type": BlockNames.ReferenceBlockTypes.Function,
       "value": Number(dropdown_option)
     }, null, 2
   )

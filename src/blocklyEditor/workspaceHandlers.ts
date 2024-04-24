@@ -694,14 +694,7 @@ export const workspaceHandler = (
     // Only starts from the main block
     if (runButton) {
         runButton.onclick = function () {
-            var mainBlock = ws.getBlocksByType(BlockNames.MainBlock.Type);
-            var codes = new Array<string>();
-
-            for (var i = 0; i < mainBlock.length; i++) {
-                var code = cycloneGenerator.blockToCode(mainBlock[i]) as string;
-                codes.push(code);
-            }
-            
+            var codes = generateCode(ws);       
             setGeneratedCodeList(codes);
             setRunButtonClicked(true);
         }
@@ -716,4 +709,29 @@ export const workspaceHandler = (
     updateRefLabels();
     // Validate all blocks on load
     validateBlocks();
+
+    // generate code list if no warnings
+    let hasWarnings = false;
+    current_warnings.forEach((value) => {
+    if (value) {
+        hasWarnings = true;
+    }
+    });
+
+    if (!hasWarnings) {
+        var codes = generateCode(ws);
+        setGeneratedCodeList(codes);
+    }
+}
+
+export const generateCode = (workspace: Blockly.WorkspaceSvg) => {
+    var mainBlock = workspace.getBlocksByType(BlockNames.MainBlock.Type);
+    var codes = new Array<string>();
+
+    for (var i = 0; i < mainBlock.length; i++) {
+        var code = cycloneGenerator.blockToCode(mainBlock[i]) as string;
+        codes.push(code);
+    }
+
+    return codes;
 }
