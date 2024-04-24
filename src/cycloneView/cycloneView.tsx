@@ -1,4 +1,4 @@
-import { Canvas, Icon, Label, Node } from "reaflow";
+import { Canvas, Edge, Icon, Label, Node } from "reaflow";
 import combiIcon from "./icons/combi.png";
 import normalImage from "./icons/normal.png";
 import queueImage from "./icons/queue.png";
@@ -7,6 +7,7 @@ import counterImage from "./icons/counter.png";
 import BlockNames from "../blocklyEditor/blocks/names";
 import { Drawer, Box } from "@mui/material";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useRef, useState } from "react";
 
 interface ModelCode {
   networkInput: Array<NetworkElement | NetworkElementWithFollowers | NetworkElementWithFollowersPreceders>;
@@ -77,13 +78,18 @@ function codeToNode(codeJson: ModelCode) {
         break;
     }
 
+    const iconDim = 45;
+    const width = 10 * (text.length) + iconDim;
+    const height = 1.5 * iconDim;
     return {
       id: id,
       text: text,
+      width: width,
+      height: height,
       icon: {
         url: icon,
-        width: 60,
-        height: 60
+        width: iconDim,
+        height: iconDim
       }
     }
   });
@@ -167,6 +173,7 @@ export function CycloneView(props: { codeList: string[] | null, showCycloneView:
       }
     });
   }
+
   return (
     <Drawer open={props.showCycloneView} onClose={props.toggleCycloneView(false)} anchor="right">
       <Box sx={{ width: "50vw", overflow: "hidden", height: "100vh" }}>
@@ -187,12 +194,11 @@ export function CycloneView(props: { codeList: string[] | null, showCycloneView:
                   style={{
                     stroke: '#1a192b',
                     fill: 'white',
-                    strokeWidth: 1
+                    strokeWidth: 1,
                   }}
                   icon={<Icon
-                    style={{
-                      moveBy: { x: -30, y: -30 }
-                    }}
+                    x={100}
+                    y={100}
                   />}
                   draggable={true}
                   label={
@@ -202,7 +208,15 @@ export function CycloneView(props: { codeList: string[] | null, showCycloneView:
                       fontWeight: 'bold'
                     }}
                     />}
+                  rx={10}
+                  ry={10}
                 />
+              }
+              edge={
+                <Edge
+                  removable={false}
+                  selectable={true}>
+                </Edge>
               }
             />
           </TransformComponent>
