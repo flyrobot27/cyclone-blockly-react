@@ -10,7 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
 import ResultView from './resultView/resultView';
@@ -189,28 +189,40 @@ function App() {
         </Tabs>
       </Box>
       <TopTabPanel value={value} index={TabIds.Editor}>
-        <Button id="RunCode"
-          variant="contained"
-          className={
-            runButtonDisabled ? "bg-gray-500 text-white mb-6 mr-4" : "bg-blue-500 text-white mb-6 mr-4"
-          } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
-        <Button component="label"
-          variant="contained"
-          className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          className='bg-red-600 text-white mb-6 mr-4'
-        >Load Model from file
-          <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
-        </Button>
-        <Button onClick={toggleCycloneView(true)}
-          variant="contained"
-          className='bg-orange-500 text-white mb-6 mr-4'>
-          Open Cyclone Diagram View
-        </Button>
+        <Stack spacing={1} direction="row">
+          <Button id="RunCode"
+            variant="contained"
+            className={
+              runButtonDisabled ? "bg-gray-500 text-white mb-6 mr-4" : "bg-blue-500 text-white mb-6 mr-4"
+            } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
+          <Button component="label"
+            variant="contained"
+            className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Download Model</Button>
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            className='bg-red-600 text-white mb-6 mr-4'
+          >Upload Model
+            <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
+          </Button>
+          <Button onClick={toggleCycloneView(true)}
+            variant="contained"
+            className='bg-orange-500 text-white mb-6 mr-4'>
+            Open Cyclone Diagram View
+          </Button>
+        </Stack>
+        <Stack spacing={1} direction="row">
+          <Button
+            component="label"
+            variant='contained'
+            className="bg-green-600 text-white mb-6 mr-4">Save Model</Button>
+          <Button
+            component="label"
+            variant='contained'
+            className="bg-red-600 text-white mb-6 mr-4">Load Model</Button>
+        </Stack>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
           className="h-[80vh]"
