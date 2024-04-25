@@ -141,6 +141,17 @@ function App() {
     }
   }
 
+  function checkIfMainBlockExists(workspace: Blockly.WorkspaceSvg) {
+    let mainBlockExists = false;
+    workspace.getAllBlocks().forEach((block) => {
+      if (block.type === BlockNames.MainBlock.Type) {
+        mainBlockExists = true;
+      }
+    });
+
+    return mainBlockExists;
+  }
+
   function getModelProcessName(workspace: Blockly.WorkspaceSvg) {
     let processName = "";
     let firstBlock = true;
@@ -166,9 +177,9 @@ function App() {
   }
 
   // Save workspace to file
-  function onSaveWorkspaceClicked() {
-    if (!workspace) {
-      alert("No workspace to save");
+  function onDownloadModelClicked() {
+    if (!workspace || !checkIfMainBlockExists(workspace)){
+      alert("No main block found. Please add a main block to the workspace.");
       return;
     };
 
@@ -246,7 +257,7 @@ function App() {
         <Stack spacing={1} direction="row">
           <Button component="label"
             variant="contained"
-            className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Download Model</Button>
+            className="bg-green-600 text-white mb-6 mr-4" onClick={onDownloadModelClicked}>Download Model</Button>
           <Button
             component="label"
             role={undefined}
