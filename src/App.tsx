@@ -18,6 +18,7 @@ import { postToSimphony } from './postToSimphony';
 import { ResultViewProps } from './resultView/resultView';
 import { CycloneView } from './cycloneView/cycloneView';
 import * as React from 'react';
+import { LoadView } from './saveLoadView/loadView';
 
 Blockly.common.defineBlocks(blocks);
 Object.assign(cycloneGenerator.forBlock, forBlock);
@@ -99,6 +100,7 @@ function App() {
   const [simphonyResultProps, setSimphonyResultProps] = useState<ResultViewProps | null>(null);
 
   const [showCycloneView, setShowCycloneView] = useState(false);
+  const [showLoadView, setShowLoadView] = useState(false);
 
   const toggleCycloneView = (open: boolean) => () => {
     if (open) {
@@ -113,6 +115,10 @@ function App() {
     }
 
     setShowCycloneView(open);
+  }
+
+  const toggleLoadView = (open: boolean) => () => {
+    setShowLoadView(open);
   }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -221,7 +227,8 @@ function App() {
           <Button
             component="label"
             variant='contained'
-            className="bg-red-600 text-white mb-6 mr-4">Load Model</Button>
+            className="bg-red-600 text-white mb-6 mr-4"
+            onClick={toggleLoadView(true)}>Load Model</Button>
         </Stack>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
@@ -250,6 +257,11 @@ function App() {
       </TopTabPanel>
       <React.Fragment>
         <CycloneView codeList={generatedCodeList} showCycloneView={showCycloneView} toggleCycloneView={toggleCycloneView} />
+      </React.Fragment>
+      <React.Fragment>
+        <LoadView showLoadView={showLoadView} toggleLoadView={toggleLoadView}>
+
+        </LoadView>
       </React.Fragment>
       <TopTabPanel value={value} index={TabIds.Result}>
         {sentToSimphony && (
