@@ -19,6 +19,7 @@ import { ResultViewProps } from './resultView/resultView';
 import { CycloneView } from './cycloneView/cycloneView';
 import * as React from 'react';
 import { LoadView } from './saveLoadView/loadView';
+import BlockNames from './blocklyEditor/blocks/names';
 
 Blockly.common.defineBlocks(blocks);
 Object.assign(cycloneGenerator.forBlock, forBlock);
@@ -140,13 +141,38 @@ function App() {
     }
   }
 
+  function getModelProcessName(workspace: Blockly.WorkspaceSvg) {
+    let processName = "";
+    let firstBlock = true;
+    workspace.getAllBlocks().forEach((block) => {
+      if (block.type === BlockNames.MainBlock.Type) {
+
+        if (!firstBlock) {
+          processName += ", ";
+        }
+        else {
+          firstBlock = false;
+        }
+
+        processName += block.getFieldValue(BlockNames.MainBlock.ProcessName);
+      }
+    });
+
+    if (processName === "") {
+      processName = "model";
+    }
+
+    return processName
+  }
+
   // Save workspace to file
   function onSaveWorkspaceClicked() {
     if (!workspace) {
       alert("No workspace to save");
       return;
     };
-    saveFile(workspace, currentWarnings, "model.json");
+
+    saveFile(workspace, currentWarnings, `${getModelProcessName(workspace)}.json`);
   }
 
   // read file
@@ -196,11 +222,28 @@ function App() {
       </Box>
       <TopTabPanel value={value} index={TabIds.Editor}>
         <Stack spacing={1} direction="row">
+          <Button
+            component="label"
+            variant='contained'
+            className="bg-green-600 text-white mb-6 mr-4">Save Model</Button>
+          <Button
+            component="label"
+            variant='contained'
+            className="bg-red-600 text-white mb-6 mr-4"
+            onClick={toggleLoadView(true)}>Load Model</Button>
           <Button id="RunCode"
             variant="contained"
             className={
               runButtonDisabled ? "bg-gray-500 text-white mb-6 mr-4" : "bg-blue-500 text-white mb-6 mr-4"
             } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
+
+          <Button onClick={toggleCycloneView(true)}
+            variant="contained"
+            className='bg-orange-500 text-white mb-6 mr-4'>
+            Open Cyclone Diagram View
+          </Button>
+        </Stack>
+        <Stack spacing={1} direction="row">
           <Button component="label"
             variant="contained"
             className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Download Model</Button>
@@ -213,22 +256,6 @@ function App() {
           >Upload Model
             <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
           </Button>
-          <Button onClick={toggleCycloneView(true)}
-            variant="contained"
-            className='bg-orange-500 text-white mb-6 mr-4'>
-            Open Cyclone Diagram View
-          </Button>
-        </Stack>
-        <Stack spacing={1} direction="row">
-          <Button
-            component="label"
-            variant='contained'
-            className="bg-green-600 text-white mb-6 mr-4">Save Model</Button>
-          <Button
-            component="label"
-            variant='contained'
-            className="bg-red-600 text-white mb-6 mr-4"
-            onClick={toggleLoadView(true)}>Load Model</Button>
         </Stack>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
@@ -259,9 +286,7 @@ function App() {
         <CycloneView codeList={generatedCodeList} showCycloneView={showCycloneView} toggleCycloneView={toggleCycloneView} />
       </React.Fragment>
       <React.Fragment>
-        <LoadView showLoadView={showLoadView} toggleLoadView={toggleLoadView}>
-
-        </LoadView>
+        <LoadView showLoadView={showLoadView} toggleLoadView={toggleLoadView} />
       </React.Fragment>
       <TopTabPanel value={value} index={TabIds.Result}>
         {sentToSimphony && (
