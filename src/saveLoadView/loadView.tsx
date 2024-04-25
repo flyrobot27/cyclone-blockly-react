@@ -7,9 +7,8 @@ export function LoadView(props: { showLoadView: boolean, toggleLoadView: (open: 
   const [modelList, setModelList] = useState(new Set<string>());
 
   useEffect(() => {
-    modelList.add("model1");
-    modelList.add("model2");
-    modelList.add("model3");
+    // Load model from axios
+    
   }, [props.showLoadView]);
 
   return (

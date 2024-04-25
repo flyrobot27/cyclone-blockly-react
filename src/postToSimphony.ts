@@ -1,7 +1,11 @@
 import axios from "axios";
 import { IRRow, NIRRow, CounterRow, WFRow, ResultViewProps } from "./resultView/resultView";
 import { Dispatch } from "react";
-const Endpoint = "https://sbeve.mooo.com/api/cyclone/";
+import env from "react-dotenv";
+
+let url = String(env.API_URL);
+url += url.endsWith("/") ? "" : "/";
+const Endpoint = `${url}/api/cyclone/`;
 
 export function postToSimphony(data: any, setResultProps: Dispatch<ResultViewProps>) {
     let intrinsicResult: IRRow[] = [];
