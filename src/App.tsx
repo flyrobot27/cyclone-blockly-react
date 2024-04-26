@@ -10,7 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Button, Stack } from '@mui/material';
+import { Button, IconButton, Snackbar, Stack } from '@mui/material';
 import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
 import ResultView from './resultView/resultView';
@@ -20,6 +20,9 @@ import { CycloneView } from './cycloneView/cycloneView';
 import * as React from 'react';
 import { LoadView } from './saveLoadView/loadView';
 import BlockNames from './blocklyEditor/blocks/names';
+import { ConfirmDialog } from './saveLoadView/loadView';
+import { saveModeltoDb } from './http/dbCRUD';
+import CloseIcon from '@mui/icons-material/Close';
 
 Blockly.common.defineBlocks(blocks);
 Object.assign(cycloneGenerator.forBlock, forBlock);
@@ -85,6 +88,10 @@ function checkIfWarningEmpty(warnings: Map<string, string | null>) {
   return hasWarnings;
 }
 
+function checkResponseCodeLevel(responseCode: number, level: number) {
+  return Math.floor(responseCode / 100) === level;
+}
+
 function App() {
 
   const [generatedCodeList, setGeneratedCodeList] = useState(Array<string>());
@@ -102,6 +109,61 @@ function App() {
 
   const [showCycloneView, setShowCycloneView] = useState(false);
   const [showLoadView, setShowLoadView] = useState(false);
+
+  // dialog variables
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertConfirm, setAlertConfirm] = useState(() => () => { });
+
+  // snackbar variables
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const saveModel = () => async () => {
+    if (!workspace) {
+      alert("Workspace not initialized.");
+      return;
+    };
+
+    const processName = getModelProcessName(workspace);
+    const workspaceData = Blockly.serialization.workspaces.save(workspace);
+
+    let responseCode = await saveModeltoDb(processName, JSON.stringify(workspaceData), Object.fromEntries(currentWarnings));
+    if (checkResponseCodeLevel(responseCode, 4)) {
+      setOpenConfirmDialog(true);
+      setAlertTitle("Warning");
+      setAlertMessage("Model already exists. Do you want to overwrite it?");
+      setAlertConfirm(() => async () => {
+        responseCode = await saveModeltoDb(processName, JSON.stringify(workspaceData), Object.fromEntries(currentWarnings), true);
+        setOpenConfirmDialog(false);
+        setOpenSnackbar(true);
+        if (checkResponseCodeLevel(responseCode, 2)) {
+          setSnackbarMessage("Model saved successfully.");
+        }
+        else {
+          setSnackbarMessage("Error saving model. Please try again later.");
+        }
+      });
+    }
+    else if (checkResponseCodeLevel(responseCode, 2)) {
+      setOpenSnackbar(true);
+      setSnackbarMessage("Model saved successfully.");
+    }
+  }
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => setOpenSnackbar(false)}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   const toggleCycloneView = (open: boolean) => () => {
     if (open) {
@@ -178,7 +240,7 @@ function App() {
 
   // Save workspace to file
   function onDownloadModelClicked() {
-    if (!workspace || !checkIfMainBlockExists(workspace)){
+    if (!workspace || !checkIfMainBlockExists(workspace)) {
       alert("No main block found. Please add a main block to the workspace.");
       return;
     };
@@ -236,7 +298,8 @@ function App() {
           <Button
             component="label"
             variant='contained'
-            className="bg-green-600 text-white mb-6 mr-4">Save Model</Button>
+            className="bg-green-600 text-white mb-6 mr-4"
+            onClick={saveModel()}>Save Model</Button>
           <Button
             component="label"
             variant='contained'
@@ -304,6 +367,26 @@ function App() {
           <ResultView data={simphonyResultProps?.data}></ResultView>
         )}
       </TopTabPanel>
+
+      <ConfirmDialog
+        isOpen={openConfirmDialog}
+        alertTitle={alertTitle}
+        alertBody={alertMessage}
+        handleClose={() => {
+          setOpenConfirmDialog(false);
+        }}
+        onConfirm={alertConfirm}
+        onDeny={() => {
+          // Do nothing
+        }} />
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+        action={action}
+      />
     </>
   )
 }

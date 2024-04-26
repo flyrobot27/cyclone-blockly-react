@@ -48,3 +48,28 @@ export function deleteModel(modelName: string, setModelList: Dispatch<Set<string
         alert("Error deleting model: " + error);
     });
 }
+
+export async function saveModeltoDb(modelName: string, workspaceData: string, warnings: any, overwrite: boolean = false) {
+    let endpoint = `${url}api/models`;
+
+    let data = {
+        [PROCESS_NAME]: modelName,
+        workspaceData: workspaceData,
+        warnings: warnings
+    };
+
+    let responseCode = 0;
+    try {
+        responseCode = (await axios.post(endpoint, data, {
+            params: {
+                overwriteExisting: overwrite
+            },
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })).status;
+        return responseCode;
+    } catch (error: any) {
+        return error.response.status;
+    }
+}

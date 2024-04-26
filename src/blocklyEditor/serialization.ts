@@ -29,6 +29,11 @@ export const save = function(workspace: Blockly.Workspace, current_warnings: Map
   window.localStorage?.setItem(warningStorageKey, JSON.stringify(Object.fromEntries(current_warnings)));
 };
 
+/**
+ * Overwrite the existing workspace data with a given workspace data and warnings
+ * @param workspaceData the workspace data string
+ * @param current_warnings current warnings in the workspace 
+ */
 export const storageOverride = function(workspaceData: string, current_warnings: any) {
   window.localStorage?.setItem(workspaceStorageKey, workspaceData);
   if (current_warnings instanceof Map) {
