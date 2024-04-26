@@ -34,3 +34,17 @@ export function loadModel(modelName: string, setIsLoading: Dispatch<boolean>) {
         setIsLoading(false);
     });
 }
+
+export function deleteModel(modelName: string, setModelList: Dispatch<Set<string>>) {
+    let endpoint = `${url}api/models`;
+
+    axios.delete(endpoint, {
+        params: {
+            [PROCESS_NAME]: modelName
+        }
+    }).then((_response) => {
+        getModelList(setModelList);
+    }).catch((error) => {
+        alert("Error deleting model: " + error);
+    });
+}
