@@ -14,7 +14,7 @@ import { Button, Stack } from '@mui/material';
 import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
 import ResultView from './resultView/resultView';
-import { postToSimphony } from './postToSimphony';
+import { postToSimphony } from './http/postToSimphony';
 import { ResultViewProps } from './resultView/resultView';
 import { CycloneView } from './cycloneView/cycloneView';
 import * as React from 'react';
