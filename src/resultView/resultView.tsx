@@ -53,7 +53,7 @@ export interface WFRow {
     avgWaitTime: string;
 }
 
-const Item = styled(Paper)(({ theme }) => ({
+export const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
 }));

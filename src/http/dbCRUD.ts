@@ -5,12 +5,14 @@ import { storageOverride } from "../blocklyEditor/serialization";
 let url = String(import.meta.env.VITE_API_URL);
 url += url.endsWith("/") ? "" : "/";
 
-export function getModelList(setModelList: Dispatch<string[]>) {
+const PROCESS_NAME = "processName";
+
+export function getModelList(setModelList: Dispatch<Set<string>>) {
     let endpoint = `${url}api/models/list`;
 
     axios.get(endpoint).then((response) => {
         let data = response.data;
-        setModelList(data["processNames"]);
+        setModelList(new Set<string>(data[PROCESS_NAME]));
     });
 }
 
@@ -19,16 +21,15 @@ export function loadModel(modelName: string, setIsLoading: Dispatch<boolean>) {
 
     axios.get(endpoint, {
         params: {
-            processName: modelName
-        },
-        headers: {
-            'Content-Type': 'application/json'
+            [PROCESS_NAME]: modelName
         }
     }).then((response) => {
         let data = response.data;
         // Load and override the workspace
         storageOverride(data["workspace"], data["currentWarnings"]);
         window.location.reload();
+    }).catch((error) => {
+        alert("Error loading model: " + error);
     }).finally(() => {
         setIsLoading(false);
     });
