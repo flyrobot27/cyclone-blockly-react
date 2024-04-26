@@ -82,7 +82,7 @@ export function LoadView(props: { showLoadView: boolean, toggleLoadView: (open: 
               </Stack>
             </div>
             :
-            <Box sx={{ width: "25vw", overflow: "hidden", height: "100vh", display: "flex", justifyContent: "center" }}>
+            <Box sx={{ width: "25vw", minWidth: 440 , overflow: "hidden", height: "100vh", display: "flex", justifyContent: "center" }}>
               {
                 modelList.size === 0 ?
                   <h3>(No models saved)</h3>
