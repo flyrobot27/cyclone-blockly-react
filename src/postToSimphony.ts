@@ -1,9 +1,9 @@
 import axios from "axios";
 import { IRRow, NIRRow, CounterRow, WFRow, ResultViewProps } from "./resultView/resultView";
 import { Dispatch } from "react";
-import env from "react-dotenv";
 
-let url = String(env.API_URL);
+let url = String(import.meta.env.VITE_API_URL);
+console.log(url);
 url += url.endsWith("/") ? "" : "/";
 const Endpoint = `${url}api/cyclone/`;
 

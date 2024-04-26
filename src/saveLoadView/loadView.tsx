@@ -8,7 +8,8 @@ export function LoadView(props: { showLoadView: boolean, toggleLoadView: (open: 
 
   useEffect(() => {
     // Load model from axios
-    
+    // TODO. Temp data for now.
+    setModelList(new Set(["model1", "model2", "model3"]));
   }, [props.showLoadView]);
 
   return (
