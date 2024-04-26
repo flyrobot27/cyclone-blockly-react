@@ -63,7 +63,7 @@ export function LoadView(props: { showLoadView: boolean, toggleLoadView: (open: 
   const [alertTitle, setAlertTitle] = useState("");
   const [alertBody, setAlertBody] = useState("");
 
-  const [selectedModel, setSelectedModel] = useState("");
+  const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => {});
 
   useEffect(() => {
     // Load model from axios
@@ -100,7 +100,13 @@ export function LoadView(props: { showLoadView: boolean, toggleLoadView: (open: 
                                   component="label"
                                   variant="contained"
                                   onClick={() => {
-                                    loadModel(value, setIsLoading);
+                                    setAlertOpen(true);
+                                    setAlertTitle("Load Model");
+                                    setAlertBody(`Are you sure you want to load "${value}"? It will overwrite the current workspace.`);
+                                    setOnConfirmCallback(() => () => {
+                                      // Load model
+                                      loadModel(value, setIsLoading);
+                                    });
                                   }}>load</Button>
 
                                 <Button sx={{ color: 'red', border: '1px solid red', backgroundColor: 'white', "&:hover": { backgroundColor: 'white' } }}
@@ -110,7 +116,10 @@ export function LoadView(props: { showLoadView: boolean, toggleLoadView: (open: 
                                     setAlertOpen(true);
                                     setAlertTitle("Delete Model");
                                     setAlertBody(`Are you sure you want to delete "${value}"?`);
-                                    setSelectedModel(value);
+                                    setOnConfirmCallback(() => () => {
+                                      // Delete model
+                                      deleteModel(value, setModelList);
+                                    });
                                   }}>delete</Button>
                               </Stack>
                             }>
@@ -131,12 +140,7 @@ export function LoadView(props: { showLoadView: boolean, toggleLoadView: (open: 
         alertTitle={alertTitle}
         alertBody={alertBody}
         handleClose={() => setAlertOpen(false)}
-        onConfirm={() => {
-          console.log("here", selectedModel);
-          // Delete model
-          if (!selectedModel) return;
-          deleteModel(selectedModel, setModelList);
-        }}
+        onConfirm={onConfirmCallback}
         onDeny={() => {
           // Do nothing
         }}
