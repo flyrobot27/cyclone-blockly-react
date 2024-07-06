@@ -5,7 +5,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Stack, styled } from '@mui/material';
 
 export interface ResultViewProps {
     data: {
@@ -53,12 +53,21 @@ export interface WFRow {
     avgWaitTime: string;
 }
 
+export const Item = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(1),
+    textAlign: 'center',
+}));
+
+
 function ResultView(props: ResultViewProps | null): JSX.Element {
 
     if (!props || !props.data) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <CircularProgress />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+                <Stack direction="column">
+                    <Item><h2>Waiting for Results</h2></Item>
+                    <Item><CircularProgress /></Item>
+                </Stack>
             </div>
         );
     }

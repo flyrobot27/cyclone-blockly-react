@@ -10,14 +10,19 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Button } from '@mui/material';
+import { Button, IconButton, Snackbar, Stack } from '@mui/material';
 import { FileJson, saveFile, storageOverride } from './blocklyEditor/serialization';
 import { styled } from '@mui/material/styles';
 import ResultView from './resultView/resultView';
-import { postToSimphony } from './postToSimphony';
+import { postToSimphony } from './http/postToSimphony';
 import { ResultViewProps } from './resultView/resultView';
 import { CycloneView } from './cycloneView/cycloneView';
 import * as React from 'react';
+import { LoadView } from './saveLoadView/loadView';
+import BlockNames from './blocklyEditor/blocks/names';
+import { ConfirmDialog } from './saveLoadView/loadView';
+import { saveModeltoDb } from './http/dbCRUD';
+import CloseIcon from '@mui/icons-material/Close';
 
 Blockly.common.defineBlocks(blocks);
 Object.assign(cycloneGenerator.forBlock, forBlock);
@@ -83,6 +88,10 @@ function checkIfWarningEmpty(warnings: Map<string, string | null>) {
   return hasWarnings;
 }
 
+function checkResponseCodeLevel(responseCode: number, level: number) {
+  return Math.floor(responseCode / 100) === level;
+}
+
 function App() {
 
   const [generatedCodeList, setGeneratedCodeList] = useState(Array<string>());
@@ -99,6 +108,62 @@ function App() {
   const [simphonyResultProps, setSimphonyResultProps] = useState<ResultViewProps | null>(null);
 
   const [showCycloneView, setShowCycloneView] = useState(false);
+  const [showLoadView, setShowLoadView] = useState(false);
+
+  // dialog variables
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertConfirm, setAlertConfirm] = useState(() => () => { });
+
+  // snackbar variables
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const saveModel = () => async () => {
+    if (!workspace) {
+      alert("Workspace not initialized.");
+      return;
+    };
+
+    const processName = getModelProcessName(workspace);
+    const workspaceData = Blockly.serialization.workspaces.save(workspace);
+
+    let responseCode = await saveModeltoDb(processName, JSON.stringify(workspaceData), Object.fromEntries(currentWarnings));
+    if (checkResponseCodeLevel(responseCode, 4)) {
+      setOpenConfirmDialog(true);
+      setAlertTitle("Warning");
+      setAlertMessage("Model already exists. Do you want to overwrite it?");
+      setAlertConfirm(() => async () => {
+        responseCode = await saveModeltoDb(processName, JSON.stringify(workspaceData), Object.fromEntries(currentWarnings), true);
+        setOpenConfirmDialog(false);
+        setOpenSnackbar(true);
+        if (checkResponseCodeLevel(responseCode, 2)) {
+          setSnackbarMessage("Model saved successfully.");
+        }
+        else {
+          setSnackbarMessage("Error saving model. Please try again later.");
+        }
+      });
+    }
+    else if (checkResponseCodeLevel(responseCode, 2)) {
+      setOpenSnackbar(true);
+      setSnackbarMessage("Model saved successfully.");
+    }
+  }
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => setOpenSnackbar(false)}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   const toggleCycloneView = (open: boolean) => () => {
     if (open) {
@@ -113,6 +178,10 @@ function App() {
     }
 
     setShowCycloneView(open);
+  }
+
+  const toggleLoadView = (open: boolean) => () => {
+    setShowLoadView(open);
   }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -134,13 +203,49 @@ function App() {
     }
   }
 
+  function checkIfMainBlockExists(workspace: Blockly.WorkspaceSvg) {
+    let mainBlockExists = false;
+    workspace.getAllBlocks().forEach((block) => {
+      if (block.type === BlockNames.MainBlock.Type) {
+        mainBlockExists = true;
+      }
+    });
+
+    return mainBlockExists;
+  }
+
+  function getModelProcessName(workspace: Blockly.WorkspaceSvg) {
+    let processName = "";
+    let firstBlock = true;
+    workspace.getAllBlocks().forEach((block) => {
+      if (block.type === BlockNames.MainBlock.Type) {
+
+        if (!firstBlock) {
+          processName += ", ";
+        }
+        else {
+          firstBlock = false;
+        }
+
+        processName += block.getFieldValue(BlockNames.MainBlock.ProcessName);
+      }
+    });
+
+    if (processName === "") {
+      processName = "model";
+    }
+
+    return processName
+  }
+
   // Save workspace to file
-  function onSaveWorkspaceClicked() {
-    if (!workspace) {
-      alert("No workspace to save");
+  function onDownloadModelClicked() {
+    if (!workspace || !checkIfMainBlockExists(workspace)) {
+      alert("No main block found. Please add a main block to the workspace.");
       return;
     };
-    saveFile(workspace, currentWarnings, "model.json");
+
+    saveFile(workspace, currentWarnings, `${getModelProcessName(workspace)}.json`);
   }
 
   // read file
@@ -189,28 +294,43 @@ function App() {
         </Tabs>
       </Box>
       <TopTabPanel value={value} index={TabIds.Editor}>
-        <Button id="RunCode"
-          variant="contained"
-          className={
-            runButtonDisabled ? "bg-gray-500 text-white mb-6 mr-4" : "bg-blue-500 text-white mb-6 mr-4"
-          } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
-        <Button component="label"
-          variant="contained"
-          className="bg-green-600 text-white mb-6 mr-4" onClick={onSaveWorkspaceClicked}>Save Model as file</Button>
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          className='bg-red-600 text-white mb-6 mr-4'
-        >Load Model from file
-          <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
-        </Button>
-        <Button onClick={toggleCycloneView(true)}
-          variant="contained"
-          className='bg-orange-500 text-white mb-6 mr-4'>
-          Open Cyclone Diagram View
-        </Button>
+        <Stack spacing={1} direction="row">
+          <Button
+            component="label"
+            variant='contained'
+            className="bg-green-600 text-white mb-6 mr-4"
+            onClick={saveModel()}>Save Model</Button>
+          <Button
+            component="label"
+            variant='contained'
+            className="bg-red-600 text-white mb-6 mr-4"
+            onClick={toggleLoadView(true)}>Load Model</Button>
+          <Button id="RunCode"
+            variant="contained"
+            className={
+              runButtonDisabled ? "bg-gray-500 text-white mb-6 mr-4" : "bg-blue-500 text-white mb-6 mr-4"
+            } disabled={runButtonDisabled} title={runButtonTitle}>Simulate Model</Button>
+
+          <Button onClick={toggleCycloneView(true)}
+            variant="contained"
+            className='bg-orange-500 text-white mb-6 mr-4'>
+            Open Cyclone Diagram View
+          </Button>
+        </Stack>
+        <Stack spacing={1} direction="row">
+          <Button component="label"
+            variant="contained"
+            className="bg-green-600 text-white mb-6 mr-4" onClick={onDownloadModelClicked}>Download Model</Button>
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            className='bg-red-600 text-white mb-6 mr-4'
+          >Upload Model
+            <VisuallyHiddenInput type="file" accept="application/JSON" id="ModelUpload" onChange={fileLoaded} />
+          </Button>
+        </Stack>
         <BlocklyWorkspace
           toolboxConfiguration={toolbox}
           className="h-[80vh]"
@@ -239,11 +359,34 @@ function App() {
       <React.Fragment>
         <CycloneView codeList={generatedCodeList} showCycloneView={showCycloneView} toggleCycloneView={toggleCycloneView} />
       </React.Fragment>
+      <React.Fragment>
+        <LoadView showLoadView={showLoadView} toggleLoadView={toggleLoadView} />
+      </React.Fragment>
       <TopTabPanel value={value} index={TabIds.Result}>
         {sentToSimphony && (
           <ResultView data={simphonyResultProps?.data}></ResultView>
         )}
       </TopTabPanel>
+
+      <ConfirmDialog
+        isOpen={openConfirmDialog}
+        alertTitle={alertTitle}
+        alertBody={alertMessage}
+        handleClose={() => {
+          setOpenConfirmDialog(false);
+        }}
+        onConfirm={alertConfirm}
+        onDeny={() => {
+          // Do nothing
+        }} />
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+        action={action}
+      />
     </>
   )
 }

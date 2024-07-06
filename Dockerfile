@@ -1,4 +1,11 @@
 FROM node:20-alpine AS build-stage
+
+# build arguments
+ARG VITE_API_URL
+
+# Set environment variables
+ENV VITE_API_URL=$VITE_API_URL
+
 WORKDIR /app
 COPY package.json .
 RUN npm install

@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/blocklyEditor/serialization.ts"],
+  "include": ["src", "src/blocklyEditor/serialization.ts", "src/postToSimphony.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
