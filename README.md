@@ -20,5 +20,15 @@ The app will be listening on Port 5173
 ## Overview
 This application allows for the creation of [CYCLONE](https://engineering.purdue.edu/CEM/people/Personal/Halpin/Sim/index_html) simulation models with [Google's Blockly](https://github.com/google/blockly) Visual Programming tool.
 
-The Blockly Editor allows for editing of each CYCLONE components
+The Blockly Editor allows for editing of each CYCLONE components:\
+![Editor](images/main_editor.png)
 
+You can also visualize the model as a compute graph, if that's preferred:\
+![Visual](images/visual.png)
+
+You can also save and load existing models from database (Load Model):\
+![Load Model](images/load_model.png)\
+2 Models are provided under `evaluation models`. You can upload them with "Upload Model" button.
+
+The results are viewable from the "Result View" Tab:\
+![Result](images/result_view.png)
