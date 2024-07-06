@@ -3,8 +3,10 @@
 This is the frontend blockly editor for the CYCLONE model
 
 Framework / Language Used:
-React
-Typescript
+- React
+- Typescript
+- Tailwind CSS
+- [reaflow](https://github.com/reaviz/reaflow)
 
 App created using Vite
 
