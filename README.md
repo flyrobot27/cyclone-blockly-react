@@ -19,7 +19,8 @@ App created using Vite
 - Python
 - [Simphony](https://www.ualberta.ca/engineering/research/groups/construction-simulation/simphony.html) Modified for .NET 8.0
 ## Deployment
-
+Here is the overall architecture of the system:\
+![Architecture](images/architecture.png)
 ### Frontend
 Build the application using docker. A Dockerfile is provided. A docker compose file is also provided to bring up the application.
 
